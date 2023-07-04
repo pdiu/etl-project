@@ -23,12 +23,12 @@ def get_sentinment_data() -> pd.DataFrame:
     df = pd.DataFrame(data)
     return df
 
-def retrieve_api_key(secret_id:str) -> str:
+def retrieve_api_key(config_name:str) -> str:
     with open(f"{CONFIG_PATH}\secrets.json") as config_file:
         data = json.load(config_file)
 
     for config in data:
-        if config["name"] == secret_id:
+        if config["name"] == config_name:
             api_key = config["api_key"]
             return api_key
     
