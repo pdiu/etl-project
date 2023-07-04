@@ -6,6 +6,8 @@ What I want to achieve from this:
 
 """
 import os
+import json
+import requests
 from pathlib import Path
 import pandas as pd
 from prefect import flow, task
@@ -14,27 +16,36 @@ from prefect_gcp.cloud_storage import GcsBucket
 import pdb
 # import streamlit as st
 
-@flow()
 def etl_flow() -> None:
     """
     Calls all related tasks to the ETL flow.
     """
-    # Read data file
-    data_file = f"{DATA_DIR}\data.csv"
-    df = pd.read_csv(data_file)
+    df = get_sentinment_data()
+    print(df.head())
 
-    # Clean df
-    clean_df = clean_data(df)
+def get_sentinment_data() -> pd.DataFrame:
+    url = f"{ALPHA_VANTAGE_API_URL}?function=NEWS_SENTIMENT&tickers=CRYPTO:BTC&apikey={API_KEY}"
+    r = requests.get(url)
+    data = r.json()
+    df = pd.DataFrame(data)
+    return df
 
-    # Save cleaned df
-    saved_data_dir = save_data_locally(clean_df)
+def retrieve_api_key(secret_id:str) -> str:
+    with open(f"{CONFIG_PATH}\secrets.json") as config_file:
+        data = json.load(config_file)
 
-    # Upload data to GCP storage bucket
-    ## Ensure your Prefect GCS block and credentials is configured.
-    write_data_to_gcs(saved_data_dir)
+    for config in data:
+        if config["name"] == secret_id:
+            api_key = config["api_key"]
+            return api_key
+    
+    return None
 
 @task()
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Basic dataframe clean.
+    """
     df.drop(df.columns[0], axis=1, inplace=True)
     # Data record/instance must contain mileage information
     df.dropna(subset=["mileage_in_km"], inplace=True)
@@ -43,12 +54,15 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
 @task()
 def save_data_locally(df:pd.DataFrame) -> str:
     # Save file, overwrite if exists
-    save_path = f"{DATA_DIR}\processed_data.csv"
+    save_path = f"{DATA_PATH}\processed_data.csv"
     df.to_csv(save_path, mode='w', index=False)
     return save_path
 
 @task()
 def write_data_to_gcs(file_path: str) -> None:
+    """
+    Utilize prefect GCP block and library to upload local data file to GCP storage.
+    """
     gcp_storage_block = GcsBucket.load("etl-proj-gcsbucket-block")
     gcp_storage_block.upload_from_path(
         from_path = file_path
@@ -57,9 +71,14 @@ def write_data_to_gcs(file_path: str) -> None:
     return
 
 if __name__ == "__main__":
-    # Setting global variables
-    PROJECT_DIR = os.getcwd()
-    DATA_DIR = f"{PROJECT_DIR}\data"
+    # Global path variables
+    PROJECT_PATH = os.getcwd()
+    DATA_PATH = f"{PROJECT_PATH}\data"
+    CONFIG_PATH = f"{PROJECT_PATH}\config"
+
+    # Global API variables
+    ALPHA_VANTAGE_API_URL = "https://www.alphavantage.co/query"
+    API_KEY = retrieve_api_key("Alpha Vantage")
 
     # Call to main function
     etl_flow()
