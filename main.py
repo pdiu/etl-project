@@ -1,18 +1,10 @@
-"""
-What I want to achieve from this:
-- Create a data pipeline utilizing cloud (GCP)
-- Use Prefect as the orchestration tool
-- Create a Streamlit interactive dashboard for the data.
-
-"""
 import os
 import json
 import requests
-from pathlib import Path
+from datetime import date
 import pandas as pd
 from prefect import flow, task
 from prefect_gcp.cloud_storage import GcsBucket
-# from prefect.tasks import task_input_hash
 import pdb
 # import streamlit as st
 
@@ -20,6 +12,7 @@ def etl_flow() -> None:
     """
     Calls all related tasks to the ETL flow.
     """
+    today_date = date.today().strftime("%Y-%m-%d")
     df = get_sentinment_data()
     print(df.head())
 
@@ -40,16 +33,6 @@ def retrieve_api_key(secret_id:str) -> str:
             return api_key
     
     return None
-
-@task()
-def clean_data(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Basic dataframe clean.
-    """
-    df.drop(df.columns[0], axis=1, inplace=True)
-    # Data record/instance must contain mileage information
-    df.dropna(subset=["mileage_in_km"], inplace=True)
-    return df
 
 @task()
 def save_data_locally(df:pd.DataFrame) -> str:
