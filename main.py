@@ -10,7 +10,7 @@ import pdb
 
 def etl_flow() -> None:
     """
-    Description: ELT orchestrator
+    ELT orchestrator
     """
 
     current_date = datetime.now().date()
@@ -26,6 +26,11 @@ def etl_flow() -> None:
     write_data_to_gcs(saved_file_path)
 
 def get_sentinment_data(time_from: str) -> pd.DataFrame:
+    """
+    Makes the API call to Alpha Vantage to retrieve data. The data we are retrieving is non-dynamic, in the sense
+    that we specifically want news sentiment for bitcoin from yesterday T0000 till now with a 500 response item limit
+    """
+
     url = f"{ALPHA_VANTAGE_API_URL}?function=NEWS_SENTIMENT&tickers=CRYPTO:BTC&time_from={time_from}&limit=500&apikey={API_KEY}"
     r = requests.get(url)
     data = r.json()
@@ -34,6 +39,10 @@ def get_sentinment_data(time_from: str) -> pd.DataFrame:
     return df
 
 def retrieve_api_key(config_name:str) -> str:
+    """
+    Retrieves API key from config file
+    """
+
     with open(f"{CONFIG_PATH}\secrets.json") as config_file:
         data = json.load(config_file)
 
@@ -45,10 +54,18 @@ def retrieve_api_key(config_name:str) -> str:
     return None
 
 def save_data_locally(df:pd.DataFrame, date: str, file_type: str) -> str:
+    """
+    Save API data locally. Has the ability to save as different file types as specified
+    in the function arguments.
+    """
+    
     save_path = f"{DATA_PATH}\{date}\sentiment-data.csv"
+
+    # Create directory locally if it does not exist
     if not os.path.exists(f"{DATA_PATH}\{date}"):
         os.makedirs(f"{DATA_PATH}\{date}")
 
+    # Save file based on specified file type to save as
     if file_type == "csv":  
         df.to_csv(save_path, mode='w', index=False)
     elif file_type == "parquet":
@@ -60,6 +77,7 @@ def write_data_to_gcs(file_path: str) -> None:
     """
     Utilize prefect GCP block and library to upload local data file to GCP storage.
     """
+
     gcp_storage_block = GcsBucket.load("etl-proj-gcsbucket-block")
     gcp_storage_block.upload_from_path(
         from_path = file_path
