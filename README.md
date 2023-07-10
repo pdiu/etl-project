@@ -15,3 +15,10 @@ A virtual environment is used which is not tracked by git as per best practice. 
 
 ## Config data
 This repository does not track my personal config file which the elt.py script will refer to as "secrets.json".
+
+## Other
+I will be implementing best practices along the way. This includes but is not limited to
+- Proper logging with the built-in Python module *logging*
+- Proper usage of configuration files
+- Proper usage of virtual environments
+- Proper usage of version control practices

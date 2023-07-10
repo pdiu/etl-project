@@ -1,3 +1,4 @@
+import logging
 import os
 import json
 import requests
@@ -8,24 +9,6 @@ from prefect_gcp.cloud_storage import GcsBucket
 import pdb
 # import streamlit as st
 
-@flow()
-def etl_flow() -> None:
-    """
-    ELT orchestrator
-    """
-
-    current_date = datetime.now().date()
-    yesterday_formatted_time = f"{(date.today() - timedelta(days=1)).strftime('%Y%m%d')}T0000"
-    
-    # Retrieve data from Alpha Vantage API
-    df = get_sentinment_data(yesterday_formatted_time)
-
-    # Save data locally as csv file
-    saved_file_path = save_data_locally(df, current_date, "csv")
-
-    # Upload data to GCS bucket, pre-configured in Prefect GCP storage block
-    write_data_to_gcs(saved_file_path)
-
 @task()
 def get_sentinment_data(time_from: str) -> pd.DataFrame:
     """
@@ -33,7 +16,8 @@ def get_sentinment_data(time_from: str) -> pd.DataFrame:
     Makes the API call to Alpha Vantage to retrieve data. The data we are retrieving is non-dynamic, in the sense
     that we specifically want news sentiment for bitcoin from yesterday T0000 till now with a 500 response item limit
     """
-
+    logger.info("Running get_sentiment_data()...")
+    
     function = "NEWS_SENTIMENT"
     tickers = "CRYPTO:BTC"
     url = f"{ALPHA_VANTAGE_API_URL}?function={function}&tickers={tickers}&time_from={time_from}&limit=500&apikey={API_KEY}"
@@ -41,6 +25,8 @@ def get_sentinment_data(time_from: str) -> pd.DataFrame:
     data = r.json()
     df = pd.DataFrame(data["feed"])
 
+    logger.info("Completed get_sentiment_data()...")
+    
     return df
 
 def retrieve_api_key(config_name:str) -> str:
@@ -94,15 +80,44 @@ def write_data_to_gcs(file_path: str) -> None:
 
     return
 
+@flow()
+def elt_flow() -> None:
+    """
+    ELT orchestrator
+    """
+    logger.info("Running elt_flow()...")
+    current_date = datetime.now().date()
+    yesterday_formatted_time = f"{(date.today() - timedelta(days=1)).strftime('%Y%m%d')}T0000"
+    
+    logger.info(f"Getting data from {yesterday_formatted_time} to now")
+    # Retrieve data from Alpha Vantage API
+    df = get_sentinment_data(yesterday_formatted_time)
+
+    # Save data locally as csv file
+    # saved_file_path = save_data_locally(df, current_date, "csv")
+
+    # Upload data to GCS bucket, pre-configured in Prefect GCP storage block
+    # write_data_to_gcs(saved_file_path)
+    logger.info("Completed elt_flow()...")
+
 if __name__ == "__main__":
     # Global path variables
     PROJECT_PATH = os.getcwd()
-    DATA_PATH = f"{PROJECT_PATH}\data"
-    CONFIG_PATH = f"{PROJECT_PATH}\config"
+    DATA_PATH = f"{PROJECT_PATH}\\data"
+    CONFIG_PATH = f"{PROJECT_PATH}\\config"
+    LOG_PATH = f"{PROJECT_PATH}\\logs"
 
     # Global API variables
     ALPHA_VANTAGE_API_URL = "https://www.alphavantage.co/query"
     API_KEY = retrieve_api_key("Alpha Vantage")
+    
+    # Initialize logging
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.DEBUG)
+    file_handler = logging.FileHandler(f"{LOG_PATH}\\logfile.log")
+    log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    file_handler.setFormatter(log_format)
+    logger.addHandler(file_handler)
 
     # Call to main function
-    etl_flow()
+    elt_flow()
