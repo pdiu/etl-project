@@ -8,6 +8,7 @@ from prefect_gcp.cloud_storage import GcsBucket
 import pdb
 # import streamlit as st
 
+@flow()
 def etl_flow() -> None:
     """
     ELT orchestrator
@@ -25,13 +26,17 @@ def etl_flow() -> None:
     # Upload data to GCS bucket, pre-configured in Prefect GCP storage block
     write_data_to_gcs(saved_file_path)
 
+@task()
 def get_sentinment_data(time_from: str) -> pd.DataFrame:
     """
+    EXTRACT
     Makes the API call to Alpha Vantage to retrieve data. The data we are retrieving is non-dynamic, in the sense
     that we specifically want news sentiment for bitcoin from yesterday T0000 till now with a 500 response item limit
     """
 
-    url = f"{ALPHA_VANTAGE_API_URL}?function=NEWS_SENTIMENT&tickers=CRYPTO:BTC&time_from={time_from}&limit=500&apikey={API_KEY}"
+    function = "NEWS_SENTIMENT"
+    tickers = "CRYPTO:BTC"
+    url = f"{ALPHA_VANTAGE_API_URL}?function={function}&tickers={tickers}&time_from={time_from}&limit=500&apikey={API_KEY}"
     r = requests.get(url)
     data = r.json()
     df = pd.DataFrame(data["feed"])
@@ -53,12 +58,13 @@ def retrieve_api_key(config_name:str) -> str:
     
     return None
 
+@task()
 def save_data_locally(df:pd.DataFrame, date: str, file_type: str) -> str:
     """
     Save API data locally. Has the ability to save as different file types as specified
     in the function arguments.
     """
-    
+
     save_path = f"{DATA_PATH}\{date}\sentiment-data.csv"
 
     # Create directory locally if it does not exist
@@ -73,8 +79,10 @@ def save_data_locally(df:pd.DataFrame, date: str, file_type: str) -> str:
     
     return save_path
 
+@task()
 def write_data_to_gcs(file_path: str) -> None:
     """
+    LOAD
     Utilize prefect GCP block and library to upload local data file to GCP storage.
     """
 
