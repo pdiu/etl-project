@@ -94,10 +94,10 @@ def elt_flow() -> None:
     df = get_sentinment_data(yesterday_formatted_time)
 
     # Save data locally as csv file
-    # saved_file_path = save_data_locally(df, current_date, "csv")
+    saved_file_path = save_data_locally(df, current_date, "csv")
 
     # Upload data to GCS bucket, pre-configured in Prefect GCP storage block
-    # write_data_to_gcs(saved_file_path)
+    write_data_to_gcs(saved_file_path)
     logger.info("Completed elt_flow()...")
 
 if __name__ == "__main__":

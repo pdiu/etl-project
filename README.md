@@ -1,13 +1,13 @@
 # ETL Project
 Personal ETL project utilizing core modern technologies that I want to learn to expand my data engineering skills.
 
-These technologies are:
+These skills are:
 - API familiarization. Using Python to make API calls to retrieve data (**E**LT)
 - Python for loading data into data store (E**L**T)
+- Azure cloud services for cloud storage
 - Prefect for task orchestration
 - dbt for analytical engineering, particularly with data transformations in the EL**T** process
 - Streamlit for creating a web application for interactive exploration of the data and data visualizations
-- Cloud interwoven into ll these aspects
 
 # Notes
 ## Virtual environment
