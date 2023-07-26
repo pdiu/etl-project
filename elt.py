@@ -5,9 +5,9 @@ import requests
 from datetime import date, timedelta, datetime
 import pandas as pd
 from prefect import flow, task
-from prefect_gcp.cloud_storage import GcsBucket
 import pdb
-# import streamlit as st
+from snowflake.snowpark.session import Session
+from snowflake.connector.pandas_tools import write_pandas
 
 @task()
 def get_sentinment_data(time_from: str) -> pd.DataFrame:
@@ -20,7 +20,7 @@ def get_sentinment_data(time_from: str) -> pd.DataFrame:
     
     function = "NEWS_SENTIMENT"
     tickers = "CRYPTO:BTC"
-    url = f"{ALPHA_VANTAGE_API_URL}?function={function}&tickers={tickers}&time_from={time_from}&limit=500&apikey={API_KEY}"
+    url = f"{ALPHA_VANTAGE_API_URL}?function={function}&tickers={tickers}&time_from={time_from}&limit=1000&apikey={API_KEY}"
     r = requests.get(url)
     data = r.json()
     df = pd.DataFrame(data["feed"])
@@ -29,7 +29,7 @@ def get_sentinment_data(time_from: str) -> pd.DataFrame:
     
     return df
 
-def retrieve_api_key(config_name:str) -> str:
+def get_api_key(config_name:str) -> str:
     """
     Retrieves API key from config file
     """
@@ -43,6 +43,16 @@ def retrieve_api_key(config_name:str) -> str:
             return api_key
     
     return None
+
+def get_snowflake_config() -> dict:
+    """
+    Retrieves snowflake config from config file
+    """
+    
+    with open(f"{CONFIG_PATH}\snowflake.json") as config_file:
+        config = json.load(config_file)
+        
+    return config
 
 @task()
 def save_data_locally(df:pd.DataFrame, date: str, file_type: str) -> str:
@@ -65,20 +75,32 @@ def save_data_locally(df:pd.DataFrame, date: str, file_type: str) -> str:
     
     return save_path
 
-@task()
-def write_data_to_gcs(file_path: str) -> None:
-    """
-    LOAD
-    Utilize prefect GCP block and library to upload local data file to GCP storage.
-    """
+# @task()
+# def write_data_to_gcs(file_path: str) -> None:
+#     """
+#     LOAD
+#     Utilize prefect GCP block and library to upload local data file to GCP storage.
+#     """
 
-    gcp_storage_block = GcsBucket.load("etl-proj-gcsbucket-block")
-    gcp_storage_block.upload_from_path(
-        from_path = file_path
-        , to_path = os.path.relpath(file_path, os.getcwd()).replace("\\", "/")
-    )
+#     gcp_storage_block = GcsBucket.load("etl-proj-gcsbucket-block")
+#     gcp_storage_block.upload_from_path(
+#         from_path = file_path
+#         , to_path = os.path.relpath(file_path, os.getcwd()).replace("\\", "/")
+#     )
 
-    return
+#     return
+@task
+def create_snowflake_session():
+    connection_params = {
+        "account": SNOWFLAKE_CONFIG["account_id"]
+        , "user": SNOWFLAKE_CONFIG["username"]
+        , "password": SNOWFLAKE_CONFIG["password"]
+        , "warehouse": SNOWFLAKE_CONFIG["warehouse"]
+        , "database": SNOWFLAKE_CONFIG["database"]
+    }
+    session = Session.builder.configs(connection_params).create()
+    
+    return session
 
 @flow()
 def elt_flow() -> None:
@@ -92,12 +114,21 @@ def elt_flow() -> None:
     logger.info(f"Getting data from {yesterday_formatted_time} to now")
     # Retrieve data from Alpha Vantage API
     df = get_sentinment_data(yesterday_formatted_time)
+    
+    # Create Snowpark connection session to Snowflake
+    session = create_snowflake_session()
+    
+    # Write data to Snowflake
+    session.write_pandas(
+        df = df
+        , table_name = "FACT_SENTIMENT"
+        , schema = "DB_STAGE"
+        , quote_identifiers = False
+    )
+    
+    # Close session
+    session.close()
 
-    # Save data locally as csv file
-    saved_file_path = save_data_locally(df, current_date, "csv")
-
-    # Upload data to GCS bucket, pre-configured in Prefect GCP storage block
-    write_data_to_gcs(saved_file_path)
     logger.info("Completed elt_flow()...")
 
 if __name__ == "__main__":
@@ -109,7 +140,8 @@ if __name__ == "__main__":
 
     # Global API variables
     ALPHA_VANTAGE_API_URL = "https://www.alphavantage.co/query"
-    API_KEY = retrieve_api_key("Alpha Vantage")
+    API_KEY = get_api_key("Alpha Vantage")
+    SNOWFLAKE_CONFIG = get_snowflake_config()
     
     # Initialize logging
     logger = logging.getLogger(__name__)
