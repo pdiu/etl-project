@@ -121,8 +121,8 @@ def elt_flow() -> None:
     # Write data to Snowflake
     session.write_pandas(
         df = df
-        , table_name = "FACT_SENTIMENT"
-        , schema = "DB_STAGE"
+        , table_name = "NEWS_SENTIMENT"
+        , schema = "ALPHAVANTAGE"
         , quote_identifiers = False
     )
     
