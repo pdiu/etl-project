@@ -26,5 +26,5 @@ with final as (
     from raw.alphavantage.news_sentiment
 )
 
-select * from final;
+select * from final
 
