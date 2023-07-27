@@ -22,6 +22,7 @@ with final as (
         , cast(overall_sentiment_score as decimal(18,8)) as overall_sentiment_score
         , overall_sentiment_label
         , ticker_sentiment
+        , current_timestamp as insert_timestamp
     from raw.alphavantage.news_sentiment
 )
 
