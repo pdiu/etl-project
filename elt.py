@@ -97,6 +97,7 @@ def create_snowflake_session():
         , "password": SNOWFLAKE_CONFIG["password"]
         , "warehouse": SNOWFLAKE_CONFIG["warehouse"]
         , "database": SNOWFLAKE_CONFIG["database"]
+        , "role": SNOWFLAKE_CONFIG["role"]
     }
     session = Session.builder.configs(connection_params).create()
     
@@ -109,7 +110,7 @@ def elt_flow() -> None:
     """
     logger.info("Running elt_flow()...")
     current_date = datetime.now().date()
-    yesterday_formatted_time = f"{(date.today() - timedelta(days=1)).strftime('%Y%m%d')}T0000"
+    yesterday_formatted_time = f"{(date.today() - timedelta(days=365)).strftime('%Y%m%d')}T0000"
     
     logger.info(f"Getting data from {yesterday_formatted_time} to now")
     # Retrieve data from Alpha Vantage API
