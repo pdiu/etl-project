@@ -22,7 +22,7 @@ Objectives:
 - Intro to Snowflake
 
 Notes:
-- [potential good learning source for dbt](https://www.startdataengineering.com/post/dbt-data-build-tool-tutorial/)
+- [Potential good learning source for dbt](https://www.startdataengineering.com/post/dbt-data-build-tool-tutorial/)
 
 Outcomes:
 - Created trial account
@@ -106,10 +106,15 @@ Objectives:
 - Write out in simple terms what RBAC is, and what the best practice is in Snowflake
 - Re-structure current "stg_news_sentiment" as per best practice
   - https://github.com/dbt-labs/corp/blob/main/dbt_style_guide.md
+- Update elt.py script to dynamically call write_pandas to upsert into RAW table
 - Import some other data sources from AlphaVantage
   - Explore AV to see what other data interests me and pull that
 - Learn about [Snowflake architecture](https://www.youtube.com/watch?v=IocdgUB94KQ&list=PLba2xJ7yxHB7SWc4Sm-Sp3uGN74ulI4pS&index=4)
 
 Notes:
+- Role based access control is a method of provisioning access, or a way in which part of data governance is enforced by restricting access to "roles" rather than individual users. Roles can be pre-determined or custom created. In the context of Snowflake, there are some default roles such as USERADMIN and SYSADMIN which can be assigned at the beginning but you can and should create your own roles to provision differing levels of access depending on the role and users will be assigned roles depending on which team and therefore what level of access to the Snowflake account they will have. For example, analysts will not need to create warehouses or databases therefore their role will not have these privileges whereas a project manager role will.
 
 Outcomes:
+- Finished "Models" section of DBT fundamentals course
+- stg_news_sentiment already created as per most best practices I believe.
+- Updated elt.py script to add some logging and function to upsert raw data to Snowflake. Still needs some work.

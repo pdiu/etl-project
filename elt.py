@@ -33,7 +33,6 @@ def get_api_key(config_name:str) -> str:
     """
     Retrieves API key from config file
     """
-
     with open(f"{CONFIG_PATH}\secrets.json") as config_file:
         data = json.load(config_file)
 
@@ -48,7 +47,6 @@ def get_snowflake_config() -> dict:
     """
     Retrieves snowflake config from config file
     """
-    
     with open(f"{CONFIG_PATH}\snowflake.json") as config_file:
         config = json.load(config_file)
         
@@ -60,7 +58,6 @@ def save_data_locally(df:pd.DataFrame, date: str, file_type: str) -> str:
     Save API data locally. Has the ability to save as different file types as specified
     in the function arguments.
     """
-
     save_path = f"{DATA_PATH}\{date}\sentiment-data.csv"
 
     # Create directory locally if it does not exist
@@ -75,33 +72,38 @@ def save_data_locally(df:pd.DataFrame, date: str, file_type: str) -> str:
     
     return save_path
 
-# @task()
-# def write_data_to_gcs(file_path: str) -> None:
-#     """
-#     LOAD
-#     Utilize prefect GCP block and library to upload local data file to GCP storage.
-#     """
-
-#     gcp_storage_block = GcsBucket.load("etl-proj-gcsbucket-block")
-#     gcp_storage_block.upload_from_path(
-#         from_path = file_path
-#         , to_path = os.path.relpath(file_path, os.getcwd()).replace("\\", "/")
-#     )
-
-#     return
 @task
 def create_snowflake_session():
+    account = SNOWFLAKE_CONFIG["account_id"]
+    user = SNOWFLAKE_CONFIG["username"]
+    password = SNOWFLAKE_CONFIG["password"]
+    warehouse = SNOWFLAKE_CONFIG["warehouse"]
+    database = SNOWFLAKE_CONFIG["database"]
+    role = SNOWFLAKE_CONFIG["role"]
     connection_params = {
-        "account": SNOWFLAKE_CONFIG["account_id"]
-        , "user": SNOWFLAKE_CONFIG["username"]
-        , "password": SNOWFLAKE_CONFIG["password"]
-        , "warehouse": SNOWFLAKE_CONFIG["warehouse"]
-        , "database": SNOWFLAKE_CONFIG["database"]
-        , "role": SNOWFLAKE_CONFIG["role"]
+        "account": account
+        , "user": user
+        , "password": password
+        , "warehouse": warehouse
+        , "database": database
+        , "role": role
     }
     session = Session.builder.configs(connection_params).create()
     
+    logger.info(f"Creating Snowflake session, {session}")
     return session
+
+@task()
+def upsert_raw_data_to_snowflake(session, df: pd.DataFrame, schema: str, table_name: str) -> None:
+    logger.info(f"Upserting data into {session.get_current_database()}.{session.get_current_schema}.{table_name}")
+    session.write_pandas(
+        df = df
+        , schema = schema
+        , table_name = table_name
+        , quote_identifiers = False
+    )
+    
+    return None
 
 @flow()
 def elt_flow() -> None:
@@ -110,24 +112,20 @@ def elt_flow() -> None:
     """
     logger.info("Running elt_flow()...")
     current_date = datetime.now().date()
-    yesterday_formatted_time = f"{(date.today() - timedelta(days=365)).strftime('%Y%m%d')}T0000"
+    yesterday_formatted_time = f"{(date.today() - timedelta(days=1)).strftime('%Y%m%d')}T0000"
     
-    logger.info(f"Getting data from {yesterday_formatted_time} to now")
     # Retrieve data from Alpha Vantage API
+    logger.info(f"Getting data from {yesterday_formatted_time} to now")
     df = get_sentinment_data(yesterday_formatted_time)
     
     # Create Snowpark connection session to Snowflake
     session = create_snowflake_session()
     
-    # Write data to Snowflake
-    session.write_pandas(
-        df = df
-        , table_name = "NEWS_SENTIMENT"
-        , schema = "ALPHAVANTAGE"
-        , quote_identifiers = False
-    )
+    # Upsert raw data into Snowflake
+    upsert_raw_data_to_snowflake(session, df, "ALPHAVANTAGE", "NEWS_SENTIMENT")
     
     # Close session
+    logger.info(f"Closing Snowflake session, {session}")
     session.close()
 
     logger.info("Completed elt_flow()...")
@@ -142,6 +140,8 @@ if __name__ == "__main__":
     # Global API variables
     ALPHA_VANTAGE_API_URL = "https://www.alphavantage.co/query"
     API_KEY = get_api_key("Alpha Vantage")
+    
+    # Get configurations
     SNOWFLAKE_CONFIG = get_snowflake_config()
     
     # Initialize logging
