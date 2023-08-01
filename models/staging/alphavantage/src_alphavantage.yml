@@ -1,0 +1,8 @@
+version: 1
+
+sources:
+  - name: alphavantage
+    database: raw
+    schema: alphavantage
+    tables:
+      - name: news_sentiment

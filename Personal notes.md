@@ -5,7 +5,8 @@
   - [28](#28)
   - [30](#30)
   - [31](#31)
-
+- [August](#august)
+  - [01](#01)
 ## July 2023
 ### 25
 Objectives:
@@ -118,3 +119,20 @@ Outcomes:
 - Finished "Models" section of DBT fundamentals course
 - stg_news_sentiment already created as per most best practices I believe.
 - Updated elt.py script to add some logging and function to upsert raw data to Snowflake. Still needs some work.
+
+## August
+### 01
+Objectives:
+- Gain an understanding of the concept of marts and stage as per best practice from dbt
+- [Implement the "ref" functionality from dbt into my project with stage and mart models ](https://www.getdbt.com/analytics-engineering/modular-data-modeling-technique/)
+- Finish updating elt.py to reduce redundancy
+- Watch the "Sources" section of the dbt fundamentals course
+- Implement sources into dbt
+
+Notes:
+- Staging and mart model categories are a way to modularize data modelling. Staging models will contain raw data that has been prepared, for example simple clean ups and transformation on raw data for things like making the date columns correct, converting "n/a" strings into nulls, etc.
+- Marts is where you start to apply business logics and therefore will usually contain heavier transformations. Mart models will reflect core business data assets that will be used directly for analytics. Marts will contain your fact and dim tables. Think of it as the "DB_LOAD" schema in DWBT.
+  - The Mart layer will often contain tables that utilize multiple staging models and use joins, case whens, window functions, etc. the more complex transformations.
+- Note there are more layers such as base, and intermediate but these are usually for more complex data models and I will not be using them in my project.
+
+Outcomes:

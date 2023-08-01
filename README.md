@@ -20,7 +20,7 @@ This repository tracks configuration which is not to be shared.
 - *secrets.json* contains API keys
 - *snowflake.json* contains Snowflake credentials
 
-## Other
+## Other    
 I will be implementing best practices along the way. This includes but is not limited to
 - Proper logging with the built-in Python module *logging*
 - Proper usage of configuration files
