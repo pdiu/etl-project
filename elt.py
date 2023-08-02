@@ -14,9 +14,10 @@ def get_sentinment_data(time_from: str) -> pd.DataFrame:
     """
     EXTRACT
     Makes the API call to Alpha Vantage to retrieve data. The data we are retrieving is non-dynamic, in the sense
-    that we specifically want news sentiment for bitcoin from yesterday T0000 till now with a 500 response item limit
+    that we specifically want news sentiment for bitcoin from yesterday T0000 till now with a 1000 response item limit
     """
     logger.info("Running get_sentiment_data()...")
+    logger.info(f"Getting data from {time_from} to now")
     
     function = "NEWS_SENTIMENT"
     tickers = "CRYPTO:BTC"
@@ -24,7 +25,10 @@ def get_sentinment_data(time_from: str) -> pd.DataFrame:
     r = requests.get(url)
     data = r.json()
     df = pd.DataFrame(data["feed"])
+    
+    df["insert_timestamp"] = pd.Timestamp("now").strftime("%Y-%m-%d %H:%M:%S")
 
+    logger.info(f"Retrieved {df.shape[0]} row(s) of data")
     logger.info("Completed get_sentiment_data()...")
     
     return df
@@ -73,19 +77,20 @@ def save_data_locally(df:pd.DataFrame, date: str, file_type: str) -> str:
     return save_path
 
 @task
-def create_snowflake_session():
+def create_snowflake_session() -> Session:
+    """
+    Create a snowflake session
+    """
     account = SNOWFLAKE_CONFIG["account_id"]
     user = SNOWFLAKE_CONFIG["username"]
     password = SNOWFLAKE_CONFIG["password"]
     warehouse = SNOWFLAKE_CONFIG["warehouse"]
-    database = SNOWFLAKE_CONFIG["database"]
     role = SNOWFLAKE_CONFIG["role"]
     connection_params = {
         "account": account
         , "user": user
         , "password": password
         , "warehouse": warehouse
-        , "database": database
         , "role": role
     }
     session = Session.builder.configs(connection_params).create()
@@ -95,9 +100,16 @@ def create_snowflake_session():
 
 @task()
 def upsert_raw_data_to_snowflake(session, df: pd.DataFrame, schema: str, table_name: str) -> None:
-    logger.info(f"Upserting data into {session.get_current_database()}.{session.get_current_schema}.{table_name}")
+    """
+    Write in append mode to provided snowflake schema and table, database is defined in the snowflake.json file
+    """
+    session.use_database("raw")
+    
+    logger.info(f"Upserting data into {session.get_current_database()}.{session.get_current_schema()}.{table_name}")
+    
     session.write_pandas(
         df = df
+        , database = "raw"
         , schema = schema
         , table_name = table_name
         , quote_identifiers = False
@@ -111,11 +123,9 @@ def elt_flow() -> None:
     ELT orchestrator
     """
     logger.info("Running elt_flow()...")
-    current_date = datetime.now().date()
-    yesterday_formatted_time = f"{(date.today() - timedelta(days=1)).strftime('%Y%m%d')}T0000"
+    yesterday_formatted_time = f"{(date.today() - timedelta(days=90)).strftime('%Y%m%d')}T0000"
     
     # Retrieve data from Alpha Vantage API
-    logger.info(f"Getting data from {yesterday_formatted_time} to now")
     df = get_sentinment_data(yesterday_formatted_time)
     
     # Create Snowpark connection session to Snowflake
@@ -128,7 +138,7 @@ def elt_flow() -> None:
     logger.info(f"Closing Snowflake session, {session}")
     session.close()
 
-    logger.info("Completed elt_flow()...")
+    logger.info("ELT pipeline ran successfully with no errors!")
 
 if __name__ == "__main__":
     # Global path variables

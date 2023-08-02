@@ -7,6 +7,8 @@
   - [31](#31)
 - [August](#august)
   - [01](#01)
+  - [03](#03)
+- [Objectives:](#objectives)
 ## July 2023
 ### 25
 Objectives:
@@ -143,3 +145,7 @@ Outcomes:
 - Gained understanding of when to use stage and marts as model concepts in dbt
 - Completed "Sources" section of fundamentals course
 - Successfully implemented sources into dbt project
+
+### 03
+Objectives:
+- 
