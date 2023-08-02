@@ -38,5 +38,4 @@ models:
     staging:
       alphavantage:
         +database: staging
-        +schema: alphavantage
         +materialized: table
