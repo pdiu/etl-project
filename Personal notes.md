@@ -127,12 +127,19 @@ Objectives:
 - [Implement the "ref" functionality from dbt into my project with stage and mart models ](https://www.getdbt.com/analytics-engineering/modular-data-modeling-technique/)
 - Finish updating elt.py to reduce redundancy
 - Watch the "Sources" section of the dbt fundamentals course
-- Implement sources into dbt
+- Implement sources into dbt project
+- Familiarize with tests in dbt
+- Work out how all the yml files work with each other and how they're different from each other as well as best practices
 
 Notes:
 - Staging and mart model categories are a way to modularize data modelling. Staging models will contain raw data that has been prepared, for example simple clean ups and transformation on raw data for things like making the date columns correct, converting "n/a" strings into nulls, etc.
 - Marts is where you start to apply business logics and therefore will usually contain heavier transformations. Mart models will reflect core business data assets that will be used directly for analytics. Marts will contain your fact and dim tables. Think of it as the "DB_LOAD" schema in DWBT.
   - The Mart layer will often contain tables that utilize multiple staging models and use joins, case whens, window functions, etc. the more complex transformations.
 - Note there are more layers such as base, and intermediate but these are usually for more complex data models and I will not be using them in my project.
+- dbt build combines dbt test and dbt run
+- Best practice for yml file structure is to have cascading configs, taking advantage of the organized structure of your project. Have a __models in each end sub-directory to configure that sub-directorie's models. For example, in marts/finance there will be a finance__models.yml file which will configure the models in the finance mart. Also __sources.yml will be present in the staging models. For exmaple in staging/jaffle_shop model category there will be a _jaffle_shop_sources.yml to define the raw data sources for jaffle shop staging models.
 
 Outcomes:
+- Gained understanding of when to use stage and marts as model concepts in dbt
+- Completed "Sources" section of fundamentals course
+- Successfully implemented sources into dbt project

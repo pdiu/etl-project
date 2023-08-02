@@ -36,6 +36,6 @@ models:
     marts:
       +materialized: table
     staging:
+      +materialized: view
       alphavantage:
         +database: staging
-        +materialized: table
