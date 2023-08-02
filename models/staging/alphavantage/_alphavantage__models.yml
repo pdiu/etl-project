@@ -1,1 +1,7 @@
 # add some tests and sort columns for stg tables here
+version: 2
+
+models:
+  - name: stg_news_sentiments
+    config:
+      sort: date_published
