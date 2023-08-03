@@ -9,30 +9,6 @@ import pdb
 from snowflake.snowpark.session import Session
 from snowflake.connector.pandas_tools import write_pandas
 
-@task()
-def get_sentinment_data(time_from: str) -> pd.DataFrame:
-    """
-    EXTRACT
-    Makes the API call to Alpha Vantage to retrieve data. The data we are retrieving is non-dynamic, in the sense
-    that we specifically want news sentiment for bitcoin from yesterday T0000 till now with a 1000 response item limit
-    """
-    logger.info("Running get_sentiment_data()...")
-    logger.info(f"Getting data from {time_from} to now")
-    
-    function = "NEWS_SENTIMENT"
-    tickers = "CRYPTO:BTC"
-    url = f"{ALPHA_VANTAGE_API_URL}?function={function}&tickers={tickers}&time_from={time_from}&limit=1000&apikey={API_KEY}"
-    r = requests.get(url)
-    data = r.json()
-    df = pd.DataFrame(data["feed"])
-    
-    df["insert_timestamp"] = pd.Timestamp("now").strftime("%Y-%m-%d %H:%M:%S")
-
-    logger.info(f"Retrieved {df.shape[0]} row(s) of data")
-    logger.info("Completed get_sentiment_data()...")
-    
-    return df
-
 def get_api_key(config_name:str) -> str:
     """
     Retrieves API key from config file
@@ -57,24 +33,30 @@ def get_snowflake_config() -> dict:
     return config
 
 @task()
-def save_data_locally(df:pd.DataFrame, date: str, file_type: str) -> str:
+def get_sentinment_data(ticker_type: str, ticker: str) -> pd.DataFrame:
     """
-    Save API data locally. Has the ability to save as different file types as specified
-    in the function arguments.
+    EXTRACT
+    Makes the API call to Alpha Vantage to retrieve data. The data we are retrieving is non-dynamic, in the sense
+    that we specifically want news sentiment for bitcoin from yesterday T0000 till now with a 1000 response item limit
     """
-    save_path = f"{DATA_PATH}\{date}\sentiment-data.csv"
-
-    # Create directory locally if it does not exist
-    if not os.path.exists(f"{DATA_PATH}\{date}"):
-        os.makedirs(f"{DATA_PATH}\{date}")
-
-    # Save file based on specified file type to save as
-    if file_type == "csv":  
-        df.to_csv(save_path, mode='w', index=False)
-    elif file_type == "parquet":
-        df.to_parquet(save_path, mode='w', index=False)
+    time_from = f"{(date.today() - timedelta(days=1)).strftime('%Y%m%d')}T0000"
     
-    return save_path
+    logger.info("Running get_sentiment_data()...")
+    logger.info(f"Getting data from {time_from} to now")
+    
+    ticker = f"{ticker_type.upper()}:{ticker.upper()}"
+    url = f"{ALPHA_VANTAGE_API_URL}?function=NEWS_SENTIMENT&tickers={ticker}&time_from={time_from}&limit=1000&apikey={API_KEY}"
+    r = requests.get(url)
+    data = r.json()
+    df = pd.DataFrame(data["feed"])
+    
+    # Inserting extra metadata
+    df["insert_timestamp"] = pd.Timestamp("now").strftime("%Y-%m-%d %H:%M:%S")
+
+    logger.info(f"Retrieved {df.shape[0]} row(s) of data")
+    logger.info("Completed get_sentiment_data()...")
+    
+    return df
 
 @task
 def create_snowflake_session() -> Session:
@@ -99,7 +81,7 @@ def create_snowflake_session() -> Session:
     return session
 
 @task()
-def upsert_raw_data_to_snowflake(session, df: pd.DataFrame, schema: str, table_name: str) -> None:
+def push_raw_data_to_snowflake(session, df: pd.DataFrame, schema: str, table_name: str) -> None:
     """
     Write in append mode to provided snowflake schema and table, database is defined in the snowflake.json file
     """
@@ -123,16 +105,15 @@ def elt_flow() -> None:
     ELT orchestrator
     """
     logger.info("Running elt_flow()...")
-    yesterday_formatted_time = f"{(date.today() - timedelta(days=90)).strftime('%Y%m%d')}T0000"
     
-    # Retrieve data from Alpha Vantage API
-    df = get_sentinment_data(yesterday_formatted_time)
+    # Retrieve Bitcoin news sentiment from Alpha Vantage API
+    df = get_sentinment_data("CRYPTO", "BTC")
     
     # Create Snowpark connection session to Snowflake
     session = create_snowflake_session()
     
     # Upsert raw data into Snowflake
-    upsert_raw_data_to_snowflake(session, df, "ALPHAVANTAGE", "NEWS_SENTIMENT")
+    push_raw_data_to_snowflake(session, df, "ALPHAVANTAGE", "NEWS_SENTIMENT")
     
     # Close session
     logger.info(f"Closing Snowflake session, {session}")

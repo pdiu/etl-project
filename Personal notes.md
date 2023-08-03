@@ -8,7 +8,6 @@
 - [August](#august)
   - [01](#01)
   - [03](#03)
-- [Objectives:](#objectives)
 ## July 2023
 ### 25
 Objectives:
@@ -148,4 +147,11 @@ Outcomes:
 
 ### 03
 Objectives:
-- 
+- Explore Snowpark more, gain a deeper understanding and become more proficient at using it
+- Ingest another data source, create another source table in Snowflake
+- Implement some tests into dbt project
+- Have a quick look into Terraform
+
+Notes:
+
+Outcomes:
