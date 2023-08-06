@@ -2,6 +2,6 @@
 version: 2
 
 models:
-  - name: stg_news_sentiments
+  - name: stg_alphavantage_news__sentiments
     config:
       sort: date_published

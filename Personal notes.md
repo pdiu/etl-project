@@ -153,5 +153,7 @@ Objectives:
 - Have a quick look into Terraform
 
 Notes:
+[Some amazing reads on how Gitlab structures their data platform](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/overview.md)
 
 Outcomes:
+- Didn't get much done. Haven't touched the project since this day, needed a little break.
