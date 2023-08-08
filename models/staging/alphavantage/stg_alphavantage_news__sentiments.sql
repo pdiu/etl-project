@@ -16,7 +16,7 @@ with stg_news_sentiment as (
         , cast(overall_sentiment_score as decimal(18,8)) as overall_sentiment_score
         , overall_sentiment_label
         , ticker_sentiment
-        , current_timestamp as insert_timestamp
+        , insert_timestamp
     from {{ source('alphavantage', 'news_sentiment') }}
 )
 select * from stg_news_sentiment
