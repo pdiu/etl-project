@@ -8,6 +8,8 @@
 - [August](#august)
   - [01](#01)
   - [03](#03)
+  - [08](#08)
+- [Outcomes:](#outcomes)
 ## July 2023
 ### 25
 Objectives:
@@ -153,7 +155,21 @@ Objectives:
 - Have a quick look into Terraform
 
 Notes:
-[Some amazing reads on how Gitlab structures their data platform](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/overview.md)
+- [Some amazing reads on how Gitlab structures their data platform](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/models/overview.md)
+- https://gitlab.com/gitlab-data/analytics/-/tree/master
+
 
 Outcomes:
 - Didn't get much done. Haven't touched the project since this day, needed a little break.
+
+### 08
+Objectives:
+- Explore Snowpark more, gain a deeper understanding and become more proficient at using it
+- Implement some tests into dbt project
+- Look more into Gitlab data platform structure
+- Figure out how you want to structure your schemas and where to put dim and fact tables
+- Learn how Gitlab data platform team does their development within DBT. Such as setting up their own pred and prod tables, how does this flow back into the master pred and prod tables??
+- Finish Fundamentals course in dbt courses
+
+Outcomes:
+- 
