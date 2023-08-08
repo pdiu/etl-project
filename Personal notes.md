@@ -170,6 +170,7 @@ Objectives:
 - Figure out how you want to structure your schemas and where to put dim and fact tables
 - Learn how Gitlab data platform team does their development within DBT. Such as setting up their own pred and prod tables, how does this flow back into the master pred and prod tables??
 - Finish Fundamentals course in dbt courses
+- Read https://docs.getdbt.com/blog/kimball-dimensional-model
 
 Outcomes:
 - 
