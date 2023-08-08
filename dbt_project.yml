@@ -39,3 +39,4 @@ models:
       +materialized: view
       alphavantage:
         +database: staging
+        +schema: alphavantage
