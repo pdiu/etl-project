@@ -3,5 +3,6 @@ version: 2
 
 models:
   - name: stg_alphavantage_news__sentiments
-    +schema: alphavantage
-    +database: staging
+    config:
+      +schema: alphavantage
+      +database: staging
