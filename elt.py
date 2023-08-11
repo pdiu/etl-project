@@ -9,6 +9,7 @@ import pdb
 from snowflake.snowpark.session import Session
 from snowflake.connector.pandas_tools import write_pandas
 
+@task
 def get_api_key(config_name:str) -> str:
     """
     Retrieves API key from config file
@@ -23,6 +24,7 @@ def get_api_key(config_name:str) -> str:
     
     return None
 
+@task
 def get_snowflake_config() -> dict:
     """
     Retrieves snowflake config from config file
@@ -102,7 +104,7 @@ def push_raw_data_to_snowflake(session, df: pd.DataFrame, schema: str, table_nam
 @flow()
 def elt_flow() -> None:
     """
-    ELT orchestrator
+    ELT orchestrator. Master flow
     """
     logger.info("Running elt_flow()...")
     
