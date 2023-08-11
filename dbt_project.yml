@@ -36,7 +36,7 @@ models:
     marts:
       +materialized: table
       +core:
-        +database: mart
+        +database: marts
         +schema: core
     staging:
       +materialized: view
