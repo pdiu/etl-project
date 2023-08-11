@@ -9,7 +9,7 @@
   - [01](#01)
   - [03](#03)
   - [08](#08)
-- [Outcomes:](#outcomes)
+  - [12](#12)
 ## July 2023
 ### 25
 Objectives:
@@ -172,5 +172,6 @@ Objectives:
 - Finish Fundamentals course in dbt courses
 - Read https://docs.getdbt.com/blog/kimball-dimensional-model
 
-Outcomes:
-- 
+### 12
+Objectives
+- Pick up where I left off on the 8th
