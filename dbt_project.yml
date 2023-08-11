@@ -35,6 +35,9 @@ models:
   my_new_project:
     marts:
       +materialized: table
+      +core:
+        +database: mart
+        +schema: core
     staging:
       +materialized: view
       alphavantage:
