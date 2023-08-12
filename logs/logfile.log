@@ -252,3 +252,61 @@
 2023-08-08 14:06:52,059 - __main__ - INFO - Upserting data into "RAW"."PUBLIC".NEWS_SENTIMENT
 2023-08-08 14:06:55,286 - __main__ - INFO - Closing Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database="RAW", schema="PUBLIC", warehouse="TRANSFORMER">
 2023-08-08 14:06:55,473 - __main__ - INFO - ELT pipeline ran successfully with no errors!
+2023-08-12 10:58:04,423 - __main__ - INFO - Running elt_flow()...
+2023-08-12 10:58:04,521 - __main__ - INFO - Running get_sentiment_data()...
+2023-08-12 10:58:04,522 - __main__ - INFO - Getting data from 20230805T0000 to now
+2023-08-12 10:58:07,587 - __main__ - INFO - Retrieved 263 row(s) of data
+2023-08-12 10:58:07,588 - __main__ - INFO - Completed get_sentiment_data()...
+2023-08-12 10:58:10,552 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 10:58:10,754 - __main__ - INFO - Upserting data into "RAW"."PUBLIC".NEWS_SENTIMENT
+2023-08-12 10:58:13,349 - __main__ - INFO - Closing Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database="RAW", schema="PUBLIC", warehouse="TRANSFORMER">
+2023-08-12 10:58:13,533 - __main__ - INFO - ELT pipeline ran successfully with no errors!
+2023-08-12 17:05:26,601 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:08:57,100 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:09:20,412 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:09:20,412 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:10:09,631 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:10:34,905 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:10:34,905 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:10:35,617 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:10:35,617 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:11:58,858 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:11:58,858 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:11:59,735 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:11:59,735 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:12:24,368 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:13:26,017 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:13:56,573 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:13:56,573 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:13:57,495 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:13:57,495 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:20:53,926 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:22:59,125 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:22:59,125 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:24:08,544 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:24:08,544 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:24:09,240 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:24:09,240 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:24:26,905 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:24:26,905 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:24:27,629 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:24:27,629 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:25:15,763 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:25:15,763 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:25:16,633 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:25:16,633 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:25:41,765 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:25:41,765 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:25:42,652 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:25:42,652 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:30:00,331 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:30:00,331 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:30:00,331 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:30:00,361 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:30:00,361 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:30:00,361 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:30:00,368 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:30:00,368 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:30:00,368 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:30:12,874 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-12 17:30:12,874 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="lufmxco-hg57357", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">

@@ -175,3 +175,9 @@ Objectives:
 ### 12
 Objectives
 - Pick up where I left off on the 8th
+
+Outcomes:
+- Created a very basic streamlit app which reads from the news_sentiment core mart!
+  - I created a sql/analysis directory which will contain the queries which provide the data to be visualized
+  - Table is an altair chart. Very basic setup right now.
+  - Also completed the transformations for the news_sentiment mart table. Includes lateral tables, which is something new for me

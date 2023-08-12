@@ -4,5 +4,3 @@ version: 2
 models:
   - name: news_sentiment
     config:
-      +schema: core
-      +database: marts

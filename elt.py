@@ -9,7 +9,6 @@ import pdb
 from snowflake.snowpark.session import Session
 from snowflake.connector.pandas_tools import write_pandas
 
-@task
 def get_api_key(config_name:str) -> str:
     """
     Retrieves API key from config file
@@ -24,7 +23,6 @@ def get_api_key(config_name:str) -> str:
     
     return None
 
-@task
 def get_snowflake_config() -> dict:
     """
     Retrieves snowflake config from config file
@@ -41,7 +39,7 @@ def get_sentinment_data(ticker_type: str, ticker: str) -> pd.DataFrame:
     Makes the API call to Alpha Vantage to retrieve data. The data we are retrieving is non-dynamic, in the sense
     that we specifically want news sentiment for bitcoin from yesterday T0000 till now with a 1000 response item limit
     """
-    time_from = f"{(date.today() - timedelta(days=1)).strftime('%Y%m%d')}T0000"
+    time_from = f"{(date.today() - timedelta(days=7)).strftime('%Y%m%d')}T0000"
     
     logger.info("Running get_sentiment_data()...")
     logger.info(f"Getting data from {time_from} to now")
