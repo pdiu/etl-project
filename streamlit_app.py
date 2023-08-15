@@ -102,9 +102,6 @@ if __name__ == "__main__":
     SQL_ANALYSIS_PATH = f"{PROJECT_PATH}\\sql\\analysis"
     IMAGE_PATH = f"{PROJECT_PATH}\\images"
     
-    # Get configurations
-    SNOWFLAKE_CONFIG = get_snowflake_config()
-    
     # Initialize logging
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
