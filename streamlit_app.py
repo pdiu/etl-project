@@ -37,27 +37,54 @@ def create_snowflake_session() -> Session:
     logger.info(f"Creating Snowflake session, {session}")
     return session
 
-def get_data(sql_str: str, session):
-    return session.sql(sql_str).to_pandas()
-
-def create_bar_chart(df):
-    bar_chart = alt.Chart(df).mark_bar().encode(
-        x = "DATE_PUBLISHED"
-        , y = "AVG_TICKER_SENTIMENT_SCORE"
-        , color = "TOPIC"
-    )
+def get_data(sql_str: str, session) -> pd.DataFrame:
+    logging.info(f"Retrieving data from snowflake. Query used:\n{sql_str}")
     
-    st.altair_chart(bar_chart, use_container_width=True) 
+    df = session.sql(sql_str).to_pandas()
+    df = df.reset_index(drop = True)
+    return df
+
+def create_bar_chart(df: pd.DataFrame, x: str, y: str, legend:str = None) -> None:
+    logging.info(f"Creating bar chart")
+    if legend is not None:
+        bar_chart = alt.Chart(df).mark_bar().encode(
+            x = x
+            , y = y
+            , color = legend
+        ).interactive()
+    else:
+        bar_chart = alt.Chart(df).mark_bar().encode(
+            x = x
+            , y = y
+        ).interactive()
+        
+    st.altair_chart(bar_chart, use_container_width=True)
+    
+def format_df_colnames(df: pd.DataFrame) -> pd.DataFrame:
+    df.columns = df.columns.str.lower()
+    df = df.rename(columns = lambda x: x.replace("_", " ").title())
+    
+    return df
 
 def main():
     st.title("Alphavantage ELT Project - Visualizations App")
     st.header("Bitcoin News Sentiment")
     
     session = create_snowflake_session()
-    
     df = get_data(SENTIMENT_SQL, session)
-
-    create_bar_chart(df)    
+    df = format_df_colnames(df)
+    
+    st.subheader("Raw data")
+    st.dataframe(df, hide_index = True)
+    
+    st.subheader("Average ticker sentiment by date")
+    create_bar_chart(df = df, x="Date Published", y = "Avg Ticker Sentiment Score")
+    
+    st.subheader("Average ticker sentiment by topic")
+    create_bar_chart(df = df, x = "Topic", y = "Avg Ticker Sentiment Score")
+    
+    logger.info(f"Closing Snowflake session, {session}")
+    session.close()
 
 if __name__ == "__main__":
     # Global path variables

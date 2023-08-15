@@ -10,6 +10,7 @@
   - [03](#03)
   - [08](#08)
   - [12](#12)
+  - [15](#15)
 ## July 2023
 ### 25
 Objectives:
@@ -181,3 +182,17 @@ Outcomes:
   - I created a sql/analysis directory which will contain the queries which provide the data to be visualized
   - Table is an altair chart. Very basic setup right now.
   - Also completed the transformations for the news_sentiment mart table. Includes lateral tables, which is something new for me
+
+### 15
+Objectives:
+- Explore Snowpark more, gain a deeper understanding and become more proficient at using it
+- Implement some tests into dbt project
+- Finish Fundamentals course in dbt courses
+- Finish transformations
+- Get at least 2 more analytical sql queries to put into streamlit
+- [Flesh out streamlit app more](https://www.youtube.com/watch?v=Yk-unX4KnV4)
+- Deploy streamlit app
+
+Notes:
+
+Outcomes:
