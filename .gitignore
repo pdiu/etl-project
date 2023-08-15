@@ -1,6 +1,7 @@
 config/*
-logs/*
+logs/
 # Default .gitignore content added by dbt Cloud
 target/
 dbt_packages/
 # end dbt Cloud content
+.streamlit/
