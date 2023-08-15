@@ -5,6 +5,8 @@ import pdb
 import os
 import logging
 import json
+import plotly.express as px
+from PIL import Image
 from snowflake.snowpark.session import Session
 
 def get_snowflake_config() -> dict:
@@ -20,11 +22,11 @@ def create_snowflake_session() -> Session:
     """
     Create a snowflake session
     """
-    account = SNOWFLAKE_CONFIG["account_id"]
-    user = SNOWFLAKE_CONFIG["username"]
-    password = SNOWFLAKE_CONFIG["password"]
-    warehouse = SNOWFLAKE_CONFIG["warehouse"]
-    role = SNOWFLAKE_CONFIG["role"]
+    account = st.secrets.snowflake.account_id
+    user = st.secrets.snowflake.username
+    password = st.secrets.snowflake.password
+    warehouse = st.secrets.snowflake.warehouse
+    role = st.secrets.snowflake.role
     connection_params = {
         "account": account
         , "user": user
@@ -38,27 +40,26 @@ def create_snowflake_session() -> Session:
     return session
 
 def get_data(sql_str: str, session) -> pd.DataFrame:
-    logging.info(f"Retrieving data from snowflake. Query used:\n{sql_str}")
+    logger.info(f"Retrieving data from snowflake. Query used:\n{sql_str}")
     
     df = session.sql(sql_str).to_pandas()
     df = df.reset_index(drop = True)
     return df
-
-def create_bar_chart(df: pd.DataFrame, x: str, y: str, legend:str = None) -> None:
-    logging.info(f"Creating bar chart")
-    if legend is not None:
-        bar_chart = alt.Chart(df).mark_bar().encode(
-            x = x
-            , y = y
-            , color = legend
-        ).interactive()
-    else:
-        bar_chart = alt.Chart(df).mark_bar().encode(
-            x = x
-            , y = y
-        ).interactive()
-        
-    st.altair_chart(bar_chart, use_container_width=True)
+    
+def create_bar_chart(df: pd.DataFrame, x: str, y: str, color:str = None) -> None:
+    logger.info("Creating bar chart")
+    
+    fig = px.bar(
+        df
+        , x = x
+        , y = y
+        , color = color
+        , barmode = "relative"
+    )
+    fig.update_layout(showlegend=False)
+    
+    return fig
+    
     
 def format_df_colnames(df: pd.DataFrame) -> pd.DataFrame:
     df.columns = df.columns.str.lower()
@@ -67,22 +68,29 @@ def format_df_colnames(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def main():
-    st.title("Alphavantage ELT Project - Visualizations App")
-    st.header("Bitcoin News Sentiment")
-    
     session = create_snowflake_session()
-    df = get_data(SENTIMENT_SQL, session)
+    df = get_data(topic_sentiment_sql, session)
     df = format_df_colnames(df)
     
+    st.title("Alphavantage ELT Project - Visualizations App")
+    st.header("Bitcoin News Sentiment")
+    st.markdown(
+        " \
+        News sentiment data is extracted from AlphaVantage API. You can refer to the documentation [here](https://www.alphavantage.co/documentation/#news-sentiment).  \
+        Extraction and loading has been done via Python and transformations have been done with DBT. The raw data extract below is an analytical DBT model, it is not the \
+        raw data from the API.\
+        "
+    )
+
     st.subheader("Raw data")
     st.dataframe(df, hide_index = True)
-    
-    st.subheader("Average ticker sentiment by date")
-    create_bar_chart(df = df, x="Date Published", y = "Avg Ticker Sentiment Score")
-    
+
+    # st.subheader("Average ticker sentiment by date")
+    # st.plotly_chart(create_bar_chart(df, x="Date Published", y="Avg Ticker Sentiment Score"), use_container_width=True)
+
     st.subheader("Average ticker sentiment by topic")
-    create_bar_chart(df = df, x = "Topic", y = "Avg Ticker Sentiment Score")
-    
+    st.plotly_chart(create_bar_chart(df, x="Topic", y="Avg Ticker Sentiment Score", color="Topic"), use_container_width=True)
+
     logger.info(f"Closing Snowflake session, {session}")
     session.close()
 
@@ -92,6 +100,7 @@ if __name__ == "__main__":
     CONFIG_PATH = f"{PROJECT_PATH}\\config"
     LOG_PATH = f"{PROJECT_PATH}\\logs"
     SQL_ANALYSIS_PATH = f"{PROJECT_PATH}\\sql\\analysis"
+    IMAGE_PATH = f"{PROJECT_PATH}\\images"
     
     # Get configurations
     SNOWFLAKE_CONFIG = get_snowflake_config()
@@ -104,8 +113,11 @@ if __name__ == "__main__":
     file_handler.setFormatter(log_format)
     logger.addHandler(file_handler)
     
-    # SQL Queries
-    with open (f"{SQL_ANALYSIS_PATH}\\sentiment.sql", "r") as sql_file:
-        SENTIMENT_SQL  = sql_file.read()
+    # SQL Queries to visualize
+    with open (f"{SQL_ANALYSIS_PATH}\\topic_sentiment.sql", "r") as sql_file:
+        topic_sentiment_sql  = sql_file.read()
+
+    with open (f"{SQL_ANALYSIS_PATH}\\topic_sentiment.sql", "r") as sql_file:
+        daily_sentiment_sql  = sql_file.read()
 
     main()
