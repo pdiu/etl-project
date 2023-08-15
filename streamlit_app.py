@@ -13,7 +13,7 @@ def get_snowflake_config() -> dict:
     """
     Retrieves snowflake config from config file
     """
-    with open(f"{CONFIG_PATH}\snowflake.json") as config_file:
+    with open(f"{CONFIG_PATH}/snowflake.json") as config_file:
         config = json.load(config_file)
         
     return config
@@ -97,24 +97,24 @@ def main():
 if __name__ == "__main__":
     # Global path variables
     PROJECT_PATH = os.getcwd()
-    CONFIG_PATH = f"{PROJECT_PATH}\\config"
-    LOG_PATH = f"{PROJECT_PATH}\\logs"
-    SQL_ANALYSIS_PATH = f"{PROJECT_PATH}\\sql\\analysis"
-    IMAGE_PATH = f"{PROJECT_PATH}\\images"
+    CONFIG_PATH = f"{PROJECT_PATH}/config"
+    LOG_PATH = f"{PROJECT_PATH}/logs"
+    SQL_ANALYSIS_PATH = f"{PROJECT_PATH}/sql/analysis"
+    IMAGE_PATH = f"{PROJECT_PATH}/images"
     
     # Initialize logging
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
-    file_handler = logging.FileHandler(f"{LOG_PATH}\\streamlit.log")
+    file_handler = logging.FileHandler(f"{LOG_PATH}/streamlit.log")
     log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     file_handler.setFormatter(log_format)
     logger.addHandler(file_handler)
     
     # SQL Queries to visualize
-    with open (f"{SQL_ANALYSIS_PATH}\\topic_sentiment.sql", "r") as sql_file:
+    with open (f"{SQL_ANALYSIS_PATH}/topic_sentiment.sql", "r") as sql_file:
         topic_sentiment_sql  = sql_file.read()
 
-    with open (f"{SQL_ANALYSIS_PATH}\\topic_sentiment.sql", "r") as sql_file:
+    with open (f"{SQL_ANALYSIS_PATH}/topic_sentiment.sql", "r") as sql_file:
         daily_sentiment_sql  = sql_file.read()
 
     main()
