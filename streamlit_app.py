@@ -99,7 +99,7 @@ if __name__ == "__main__":
     # Initialize logging
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
-    file_handler = logging.FileHandler(f"{LOG_PATH}\\logfile.log")
+    file_handler = logging.FileHandler(f"{LOG_PATH}\\streamlit.log")
     log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     file_handler.setFormatter(log_format)
     logger.addHandler(file_handler)
