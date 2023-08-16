@@ -100,7 +100,7 @@ def main():
 if __name__ == "__main__":
     # Global path variables
     STREAMLIT_PATH = os.path.join(os.path.dirname(__file__), "..")
-    PROJECT_PATH = os.path.join(os.path.dirname(__file__), "..\..")
+    PROJECT_PATH = os.path.join(os.path.dirname(__file__), "../..")
     CONFIG_PATH = f"{PROJECT_PATH}/config"
     LOG_PATH = f"{PROJECT_PATH}/logs"
     
