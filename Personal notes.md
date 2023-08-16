@@ -193,6 +193,7 @@ Objectives:
 - [Flesh out streamlit app more](https://www.youtube.com/watch?v=Yk-unX4KnV4)
 - Deploy streamlit app
 
-Notes:
-
 Outcomes:
+- Took a few days but fully deployed a streamlit application successfully. It is quite basic right now but I've set up a multipage streamlit application with side-bar.
+- Finished transformations and added another analytical sql query which streamlit uses.
+- Finished dbt fundamentals course
