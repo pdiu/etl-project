@@ -1,6 +1,5 @@
 import pandas as pd
 import streamlit as st
-import altair as alt
 import pdb
 import os
 import logging
@@ -69,52 +68,55 @@ def format_df_colnames(df: pd.DataFrame) -> pd.DataFrame:
 
 def main():
     session = create_snowflake_session()
-    df = get_data(topic_sentiment_sql, session)
-    df = format_df_colnames(df)
-    
-    st.title("Alphavantage ELT Project - Visualizations App")
-    st.header("Bitcoin News Sentiment")
-    st.markdown(
-        " \
-        News sentiment data is extracted from AlphaVantage API. You can refer to the documentation [here](https://www.alphavantage.co/documentation/#news-sentiment).  \
-        Extraction and loading has been done via Python and transformations have been done with DBT. The raw data extract below is an analytical DBT model, it is not the \
-        raw data from the API.\
+    topic_sentiment_score_df = get_data(topic_sentiment_score_sql, session)
+    topic_sentiment_score_df = format_df_colnames(topic_sentiment_score_df)
+    topic_sentiment_label_df = get_data(topic_sentiment_label_sql, session)
+    topic_sentiment_label_df = format_df_colnames(topic_sentiment_label_df)
+
+    st.header("Topics Sentiment")
+    st.markdown("This page displays insights on the sentiment on Bitcoin based on the news topic.")
+    st.subheader("Raw data")
+    st.dataframe(topic_sentiment_score_df, hide_index = True)
+
+    st.subheader("Average ticker sentiment score by topic")
+    st.plotly_chart(create_bar_chart(topic_sentiment_score_df, x="Topic", y="Avg Ticker Sentiment Score", color="Topic"), use_container_width=True)
+    st.caption(
+        "\
+        Let Sentiment score definition = x:\n\
+        * x <= -0.35 is *Bearish*\n\
+        *  -0.35 > x <= -0.15 is *Somewhat bearish*\n\
+        * -0.15 > x <= 0.15 is *Neutral*\n\
+        * 0.15 > x <= 0.35 is *Somewhat bullish*\n\
+        * x >= 0.35 is *Bullish*\n\
         "
     )
+    
+    st.subheader("Average ticker sentiment label by topic")
+    st.plotly_chart(create_bar_chart(topic_sentiment_label_df, x="Topic", y="Avg Sentiment Label", color="Topic"), use_container_width=True)
 
-    st.subheader("Raw data")
-    st.dataframe(df, hide_index = True)
-
-    # st.subheader("Average ticker sentiment by date")
-    # st.plotly_chart(create_bar_chart(df, x="Date Published", y="Avg Ticker Sentiment Score"), use_container_width=True)
-
-    st.subheader("Average ticker sentiment by topic")
-    st.plotly_chart(create_bar_chart(df, x="Topic", y="Avg Ticker Sentiment Score", color="Topic"), use_container_width=True)
-
-    logger.info(f"Closing Snowflake session, {session}")
+    logger.info(f"losing Snowflake session, {session}")
     session.close()
 
 if __name__ == "__main__":
     # Global path variables
-    PROJECT_PATH = os.getcwd()
+    STREAMLIT_PATH = os.path.join(os.path.dirname(__file__), "..")
+    PROJECT_PATH = os.path.join(os.path.dirname(__file__), "..\..")
     CONFIG_PATH = f"{PROJECT_PATH}/config"
     LOG_PATH = f"{PROJECT_PATH}/logs"
+    
     SQL_ANALYSIS_PATH = f"{PROJECT_PATH}/sql/analysis"
-    IMAGE_PATH = f"{PROJECT_PATH}/images"
+    IMAGE_PATH = f"{STREAMLIT_PATH}/images"
     
     # Initialize logging
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
     file_handler = logging.FileHandler(f"{LOG_PATH}/streamlit.log")
-    log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    log_format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     file_handler.setFormatter(log_format)
     logger.addHandler(file_handler)
     
     # SQL Queries to visualize
-    with open (f"{SQL_ANALYSIS_PATH}/topic_sentiment.sql", "r") as sql_file:
-        topic_sentiment_sql  = sql_file.read()
-
-    with open (f"{SQL_ANALYSIS_PATH}/topic_sentiment.sql", "r") as sql_file:
-        daily_sentiment_sql  = sql_file.read()
+    topic_sentiment_score_sql = open(f"{SQL_ANALYSIS_PATH}/topic_sentiment_score.sql", "r").read()
+    topic_sentiment_label_sql = open(f"{SQL_ANALYSIS_PATH}/topic_sentiment_label.sql", "r").read()
 
     main()
