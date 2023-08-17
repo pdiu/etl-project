@@ -33,7 +33,7 @@ def main():
 
     # Title section
     st.title("Alphavantage ELT Project - Visualizations App")
-    st.caption(f"Last updated: {datetime.today().strftime('%Y-%m-%d')}")
+    st.caption(f"Last updated: {TODAY_DATE}")
     st.caption("Author: Phillip Liu")
     st.caption("Please note that this app is by no means complete, the plan is to finish off the analytics engineering side of things first in DBT then propogate \
             the changes here.")
@@ -81,7 +81,7 @@ def main():
     st.download_button(
         label = "Download raw data"
         , data = df.to_csv().encode('utf-8')
-        , file_name = "av_ns_topics_data.csv"
+        , file_name = f"av_ns_data {TODAY_DATE}.csv"
         , mime = "text/csv"
     )
 
@@ -91,4 +91,5 @@ def main():
     st.markdown("Any feedback is welcomed at phillipliuwr@gmail.com.")
 
 if __name__ == "__main__":
+    TODAY_DATE = datetime.today().strftime('%Y-%m-%d')
     main()
