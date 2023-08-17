@@ -5,7 +5,6 @@ import os
 import logging
 import json
 import plotly.express as px
-from PIL import Image
 from snowflake.snowpark.session import Session
 
 def get_snowflake_config() -> dict:
@@ -59,6 +58,17 @@ def create_bar_chart(df: pd.DataFrame, x: str, y: str, color:str = None) -> None
     
     return fig
     
+def create_line_chart(df: pd.DataFrame, x: str, y: str, color:str = None) -> None:
+    logger.info("Creating line chart")
+    
+    fig = px.line(
+        df
+        , x = x
+        , y = y
+        , color = color
+    )
+    
+    return fig
     
 def format_df_colnames(df: pd.DataFrame) -> pd.DataFrame:
     df.columns = df.columns.str.lower()
@@ -67,32 +77,27 @@ def format_df_colnames(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def main():
+    # Create sesseion
     session = create_snowflake_session()
-    topic_sentiment_score_df = get_data(topic_sentiment_score_sql, session)
-    topic_sentiment_score_df = format_df_colnames(topic_sentiment_score_df)
-    topic_sentiment_label_df = get_data(topic_sentiment_label_sql, session)
-    topic_sentiment_label_df = format_df_colnames(topic_sentiment_label_df)
+    
+    # Get data
+    topic_sentiment_df = get_data(topic_sentiment_sql, session)
+    topic_sentiment_df = format_df_colnames(topic_sentiment_df)
+    
+    topic_date_count_df = get_data(topic_date_count_sql, session)
+    topic_date_count_df = format_df_colnames(topic_date_count_df)
 
     st.header("Topics Sentiment")
-    st.markdown("This page displays insights on the sentiment on Bitcoin based on the news topic.")
-    st.subheader("Raw data")
-    st.dataframe(topic_sentiment_score_df, hide_index = True)
+    st.markdown("This page displays insights on Bitcoin news. Please see a series of graphs below and their descriptions for reference to the insights.")
+    
+    st.subheader("Articles published by date")
+    st.plotly_chart(create_line_chart(topic_date_count_df, x="Date Published", y="Articles Published", color="Topic"), use_container_width=True)
 
-    st.subheader("Average ticker sentiment score by topic")
-    st.plotly_chart(create_bar_chart(topic_sentiment_score_df, x="Topic", y="Avg Ticker Sentiment Score", color="Topic"), use_container_width=True)
-    st.caption(
-        "\
-        Let Sentiment score definition = x:\n\
-        * x <= -0.35 is *Bearish*\n\
-        *  -0.35 > x <= -0.15 is *Somewhat bearish*\n\
-        * -0.15 > x <= 0.15 is *Neutral*\n\
-        * 0.15 > x <= 0.35 is *Somewhat bullish*\n\
-        * x >= 0.35 is *Bullish*\n\
-        "
-    )
+    st.subheader("Average overall sentiment score by topic")
+    st.plotly_chart(create_bar_chart(topic_sentiment_df, x="Topic", y="Avg Overall Sentiment Score", color="Topic"), use_container_width=True)
     
     st.subheader("Average ticker sentiment label by topic")
-    st.plotly_chart(create_bar_chart(topic_sentiment_label_df, x="Topic", y="Avg Sentiment Label", color="Topic"), use_container_width=True)
+    st.plotly_chart(create_bar_chart(topic_sentiment_df, x="Topic", y="Avg Ticker Sentiment Score", color="Topic"), use_container_width=True)
 
     logger.info(f"losing Snowflake session, {session}")
     session.close()
@@ -105,7 +110,6 @@ if __name__ == "__main__":
     LOG_PATH = f"{PROJECT_PATH}/logs"
     
     SQL_ANALYSIS_PATH = f"{PROJECT_PATH}/sql/analysis"
-    IMAGE_PATH = f"{STREAMLIT_PATH}/images"
     
     # Initialize logging
     logger = logging.getLogger(__name__)
@@ -116,7 +120,6 @@ if __name__ == "__main__":
     logger.addHandler(file_handler)
     
     # SQL Queries to visualize
-    topic_sentiment_score_sql = open(f"{SQL_ANALYSIS_PATH}/topic_sentiment_score.sql", "r").read()
-    topic_sentiment_label_sql = open(f"{SQL_ANALYSIS_PATH}/topic_sentiment_label.sql", "r").read()
-
+    topic_sentiment_sql = open(f"{SQL_ANALYSIS_PATH}/topic_sentiment.sql", "r").read()
+    topic_date_count_sql = open(f"{SQL_ANALYSIS_PATH}/topic_date_count.sql", "r").read()
     main()
