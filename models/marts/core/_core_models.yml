@@ -1,6 +1,44 @@
-# add some tests and sort columns for stg tables here
 version: 2
 
 models:
   - name: news_sentiment
-    config:
+    description: The core news sentiment data table which stores transformed news sentiment data from Alpha Vantage in its final state to be used for analytics.
+    columns:
+      - name: title
+        description: The name of the news article that was published
+        data_type: text
+        tests:
+          - not_null
+      - name: date_published
+        description: The date the article was published
+        tests:
+          - not_null:
+      - name: time_published
+        description: The time the article was published on the respective day
+        tests:
+          - not_null
+      - name: author_count
+        description: The number of authors which wrote the news article
+      - name: primary_author
+        description: The main author of the news article
+      - name: secondary_author
+        description: The name of the supporting author (if any)
+      - name: summary
+        description: A summary of the news article
+      - name: source
+        description:  Who published the news article
+        tests:
+          - not_null
+      - name: category_within_source
+        description: The news category that the article belongs to for that source
+      - name: source_domain
+        description: The main website domain where the news article was published to
+      - name: topic
+        description: The topic or category of news the article falls under, can be multiple
+        tests:
+          - not_null
+      - name: topic_relevance_score
+        description: From a scale of 0 to 1, how relevant is the topic associated with this news article. If there are multiple topics, they will add up to 1 for each unique news article
+        data_type: decimal
+        tests:
+          - not null
