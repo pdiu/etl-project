@@ -39,7 +39,7 @@ def get_sentinment_data(ticker_type: str, ticker: str) -> pd.DataFrame:
     Makes the API call to Alpha Vantage to retrieve data. The data we are retrieving is non-dynamic, in the sense
     that we specifically want news sentiment for bitcoin from yesterday T0000 till now with a 1000 response item limit
     """
-    time_from = f"{(date.today() - timedelta(days=7)).strftime('%Y%m%d')}T0000"
+    time_from = f"{(date.today() - timedelta(days=1)).strftime('%Y%m%d')}T0000"
     
     logger.info("Running get_sentiment_data()...")
     logger.info(f"Getting data from {time_from} to now")
@@ -86,9 +86,6 @@ def push_raw_data_to_snowflake(session, df: pd.DataFrame, schema: str, table_nam
     Write in append mode to provided snowflake schema and table, database is defined in the snowflake.json file
     """
     session.use_database("raw")
-    
-    logger.info(f"Upserting data into {session.get_current_database()}.{session.get_current_schema()}.{table_name}")
-    
     session.write_pandas(
         df = df
         , database = "raw"
@@ -96,6 +93,8 @@ def push_raw_data_to_snowflake(session, df: pd.DataFrame, schema: str, table_nam
         , table_name = table_name
         , quote_identifiers = False
     )
+    
+    logger.info(f"Upserting data into {session.get_current_database()}.{session.get_current_schema()}.{table_name}")
     
     return None
 
@@ -119,7 +118,7 @@ def elt_flow() -> None:
     logger.info(f"Closing Snowflake session, {session}")
     session.close()
 
-    logger.info("ELT pipeline ran successfully with no errors!")
+    logger.info("Extract and load ran successfully with no errors!")
 
 if __name__ == "__main__":
     # Global path variables
