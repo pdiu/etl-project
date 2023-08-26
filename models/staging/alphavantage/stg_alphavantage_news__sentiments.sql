@@ -18,6 +18,23 @@ with stg_news_sentiment as (
         , ticker_sentiment
         , insert_timestamp
     from {{ source('alphavantage', 'news_sentiment') }}
+),
+
+stg_news_sentiment_unique as (
+    select
+        distinct title || url || date_published as unique_str
+    from stg_news_sentiment
+),
+
+final as (
+    select
+        stg.*
+    from
+        stg_news_sentiment as stg
+    inner join
+        stg_news_sentiment_unique as stg_unique
+            on stg.title || stg.url || stg.date_published = stg_unique.unique_str
 )
-select * from stg_news_sentiment
+
+select * from final
 

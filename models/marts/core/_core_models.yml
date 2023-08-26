@@ -12,7 +12,7 @@ models:
       - name: date_published
         description: The date the article was published
         tests:
-          - not_null:
+          - not_null
       - name: time_published
         description: The time the article was published on the respective day
         tests:
@@ -41,4 +41,4 @@ models:
         description: From a scale of 0 to 1, how relevant is the topic associated with this news article. If there are multiple topics, they will add up to 1 for each unique news article
         data_type: decimal
         tests:
-          - not null
+          - not_null
