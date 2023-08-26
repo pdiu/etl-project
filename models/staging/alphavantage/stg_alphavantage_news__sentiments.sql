@@ -1,3 +1,10 @@
+{{
+    config(
+        materialized = 'incremental'
+        , unique_key = 'unique_str'
+    )
+}}
+
 with stg_news_sentiment as (
     select
         title
@@ -34,6 +41,13 @@ final as (
     inner join
         stg_news_sentiment_unique as stg_unique
             on stg.title || stg.url || stg.date_published = stg_unique.unique_str
+            
+    {% if is_incremental() %}
+
+    where
+        stg.insert_timestamp > select(max(stg.insert_timestamp) from {{ this }})
+
+    {% endif %}
 )
 
 select * from final
