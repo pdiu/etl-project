@@ -83,7 +83,8 @@ def create_snowflake_session() -> Session:
 @task()
 def push_raw_data_to_snowflake(session, df: pd.DataFrame, schema: str, table_name: str) -> None:
     """
-    Write in append mode to provided snowflake schema and table, database is defined in the snowflake.json file
+    LOAD
+    Write in append mode to provided snowflake schema and table
     """
     session.use_database("raw")
     session.write_pandas(
@@ -94,7 +95,7 @@ def push_raw_data_to_snowflake(session, df: pd.DataFrame, schema: str, table_nam
         , quote_identifiers = False
     )
     
-    logger.info(f"Upserting data into {session.get_current_database()}.{session.get_current_schema()}.{table_name}")
+    logger.info(f"Upserting data into {session.get_current_database()}.{schema}.{table_name}")
     
     return None
 
@@ -103,7 +104,7 @@ def elt_flow() -> None:
     """
     ELT orchestrator. Master flow
     """
-    logger.info("Running elt_flow()...")
+    logger.info("Running ELT pipeline...")
     
     # Retrieve Bitcoin news sentiment from Alpha Vantage API
     df = get_sentinment_data("CRYPTO", "BTC")
@@ -111,7 +112,7 @@ def elt_flow() -> None:
     # Create Snowpark connection session to Snowflake
     session = create_snowflake_session()
     
-    # Upsert raw data into Snowflake
+    # Upsert raw news sentiment data into Snowflake
     push_raw_data_to_snowflake(session, df, "ALPHAVANTAGE", "NEWS_SENTIMENT")
     
     # Close session

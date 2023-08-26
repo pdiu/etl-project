@@ -78,7 +78,7 @@ def main():
     st.subheader("Average overall sentiment score by source")
     st.plotly_chart(create_bar_chart(sources_sentiment_df, x="Source", y="Avg Overall Sentiment Score"), use_container_width=True)
 
-    logger.info(f"losing Snowflake session, {session}")
+    logger.info(f"closing Snowflake session, {session}")
     session.close()
 
 if __name__ == "__main__":

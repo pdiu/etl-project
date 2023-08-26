@@ -38,14 +38,16 @@ def create_snowflake_session() -> Session:
     return session
 
 def get_data(sql_str: str, session) -> pd.DataFrame:
-    logger.info(f"Retrieving data from snowflake. Query used:\n{sql_str}")
+    logger.info(f"Retrieving data from snowflake")
     
     df = session.sql(sql_str).to_pandas()
     df = df.reset_index(drop = True)
+    
+    logger.info(f"Retrieved {df.shape[0]} row(s) of data")
     return df
     
 def create_bar_chart(df: pd.DataFrame, x: str, y: str, color:str = None) -> None:
-    logger.info("Creating bar chart")
+    logger.info(f"Creating bar chart x-axis({x}), y-axis({y}), legend({color})")
     
     fig = px.bar(
         df
@@ -59,7 +61,7 @@ def create_bar_chart(df: pd.DataFrame, x: str, y: str, color:str = None) -> None
     return fig
     
 def create_line_chart(df: pd.DataFrame, x: str, y: str, color:str = None) -> None:
-    logger.info("Creating line chart")
+    logger.info(f"Creating bar chart x-axis({x}), y-axis({y}), legend({color})")
     
     fig = px.line(
         df

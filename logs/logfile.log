@@ -595,3 +595,12 @@
 2023-08-22 23:25:17,746 - __main__ - INFO - Upserting data into "RAW"."PUBLIC".NEWS_SENTIMENT
 2023-08-22 23:25:21,829 - __main__ - INFO - Closing Snowflake session, <snowflake.snowpark.session.Session: account="bcnlasx-nn48088", role="DEVELOPER", database="RAW", schema="PUBLIC", warehouse="TRANSFORMER">
 2023-08-22 23:25:22,018 - __main__ - INFO - Extract and load ran successfully with no errors!
+2023-08-26 16:07:45,005 - __main__ - INFO - Running elt_flow()...
+2023-08-26 16:07:45,079 - __main__ - INFO - Running get_sentiment_data()...
+2023-08-26 16:07:45,079 - __main__ - INFO - Getting data from 20230825T0000 to now
+2023-08-26 16:07:46,882 - __main__ - INFO - Retrieved 50 row(s) of data
+2023-08-26 16:07:46,883 - __main__ - INFO - Completed get_sentiment_data()...
+2023-08-26 16:07:51,088 - __main__ - INFO - Creating Snowflake session, <snowflake.snowpark.session.Session: account="bcnlasx-nn48088", role="DEVELOPER", database=None, schema=None, warehouse="TRANSFORMER">
+2023-08-26 16:07:55,067 - __main__ - INFO - Upserting data into "RAW"."PUBLIC".NEWS_SENTIMENT
+2023-08-26 16:07:55,162 - __main__ - INFO - Closing Snowflake session, <snowflake.snowpark.session.Session: account="bcnlasx-nn48088", role="DEVELOPER", database="RAW", schema="PUBLIC", warehouse="TRANSFORMER">
+2023-08-26 16:07:55,337 - __main__ - INFO - Extract and load ran successfully with no errors!

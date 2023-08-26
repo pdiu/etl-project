@@ -11,6 +11,7 @@
   - [08](#08)
   - [12](#12)
   - [15](#15)
+  - [22](#22)
 ## July 2023
 ### 25
 Objectives:
@@ -197,3 +198,16 @@ Outcomes:
 - Took a few days but fully deployed a streamlit application successfully. It is quite basic right now but I've set up a multipage streamlit application with side-bar.
 - Finished transformations and added another analytical sql query which streamlit uses.
 - Finished dbt fundamentals course
+
+### 22
+Objectives:
+- Re-create Snowflake account as it's expiring
+  - Re-create all Snowflake resources uses RBAC DEFINITION.sql file
+  - Re-point configs
+  - Re-point DBT cloud settings to new Snowflake instance
+- Start "Refactoring SQL for Modularity" course on DBT courses
+- Understand and clean up DBT development space. Custom schemas, and related items.
+
+Outcomes:
+- Successfully re-created Snowflake account, all resources as before using template, and repointed everything successfully! Only took 1 hour, so nice.
+- Updated one of the staging models to be an incremental model, familiarized with Jinja if statement
