@@ -4,7 +4,7 @@ import json
 import requests
 from datetime import date, timedelta, datetime
 import pandas as pd
-from prefect import flow, task
+from dotenv import load_dotenv
 import pdb
 from snowflake.snowpark.session import Session
 from snowflake.connector.pandas_tools import write_pandas
