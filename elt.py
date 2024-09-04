@@ -44,11 +44,11 @@ def create_snowflake_session() -> Session:
     """
     Create a snowflake session
     """
-    account = SNOWFLAKE_CONFIG["account_id"]
-    user = SNOWFLAKE_CONFIG["username"]
-    password = SNOWFLAKE_CONFIG["password"]
-    warehouse = SNOWFLAKE_CONFIG["warehouse"]
-    role = SNOWFLAKE_CONFIG["role"]
+    account = os.getenv("SNOWFLAKE_ACCOUNT_ID")
+    user = os.getenv("SNOWFLAKE_ACCOUNT_USER")
+    password = os.getenv("SNOWFLAKE_ACCOUNT_PASSWORD")
+    warehouse = os.getenv("SNOWFLAKE_ACCOUNT_WAREHOUSE")
+    role = os.getenv("SNOWFLAKE_ACCOUNT_ROLE")
     connection_params = {
         "account": account
         , "user": user
