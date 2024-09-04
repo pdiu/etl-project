@@ -13,26 +13,8 @@ def get_api_key(config_name:str) -> str:
     """
     Retrieves API key from config file
     """
-    with open(f"{CONFIG_PATH}\secrets.json") as config_file:
-        data = json.load(config_file)
+    return os.getenv(config_name)
 
-    for config in data:
-        if config["name"] == config_name:
-            api_key = config["api_key"]
-            return api_key
-    
-    return None
-
-def get_snowflake_config() -> dict:
-    """
-    Retrieves snowflake config from config file
-    """
-    with open(f"{CONFIG_PATH}\snowflake.json") as config_file:
-        config = json.load(config_file)
-        
-    return config
-
-@task()
 def get_sentinment_data(ticker_type: str, ticker: str) -> pd.DataFrame:
     """
     EXTRACT
@@ -58,7 +40,6 @@ def get_sentinment_data(ticker_type: str, ticker: str) -> pd.DataFrame:
     
     return df
 
-@task
 def create_snowflake_session() -> Session:
     """
     Create a snowflake session
@@ -80,7 +61,6 @@ def create_snowflake_session() -> Session:
     logger.info(f"Creating Snowflake session, {session}")
     return session
 
-@task()
 def push_raw_data_to_snowflake(session, df: pd.DataFrame, schema: str, table_name: str) -> None:
     """
     LOAD
@@ -99,7 +79,6 @@ def push_raw_data_to_snowflake(session, df: pd.DataFrame, schema: str, table_nam
     
     return None
 
-@flow()
 def elt_flow() -> None:
     """
     ELT orchestrator. Master flow
