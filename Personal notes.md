@@ -1,18 +1,23 @@
-- [July 2023](#july-2023)
-  - [25](#25)
-  - [26](#26)
-  - [27](#27)
-  - [28](#28)
-  - [30](#30)
-  - [31](#31)
-- [August](#august)
-  - [01](#01)
-  - [03](#03)
-  - [08](#08)
-  - [12](#12)
-  - [15](#15)
-  - [22](#22)
-## July 2023
+- [2023](#2023)
+  - [July](#july)
+    - [25](#25)
+    - [26](#26)
+    - [27](#27)
+    - [28](#28)
+    - [30](#30)
+    - [31](#31)
+  - [August](#august)
+    - [01](#01)
+    - [03](#03)
+    - [08](#08)
+    - [12](#12)
+    - [15](#15)
+    - [22](#22)
+- [2024](#2024)
+  - [April](#april)
+    - [04](#04)
+# 2023
+## July
 ### 25
 Objectives:
 - Create trial Snowflake
@@ -211,3 +216,15 @@ Objectives:
 Outcomes:
 - Successfully re-created Snowflake account, all resources as before using template, and repointed everything successfully! Only took 1 hour, so nice.
 - Updated one of the staging models to be an incremental model, familiarized with Jinja if statement
+
+# 2024
+## April
+### 04
+Aye we're baaack. Let's finish this thing off now that we got a hell of a lot more dbt, data modelling and Snowflake professional work experience under our belts.
+
+Objectives(for this comeback):
+- Setup project with dbt core instead of dbt cloud
+- Still use Snowflake trial account as I don't want to go the route of persisting data in Docker through Docker volumes
+- Setup best practice dbt models. Source, staging, intermediate, core, and presentation models
+- Complete streamlit app with at least 3 analytical queries that are actually useful, as in I would use it
+- Deploy streamlit app in Docker container and make it modular so that anyone with this repo can just run it easily
