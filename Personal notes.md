@@ -228,3 +228,7 @@ Objectives(for this comeback):
 - Setup best practice dbt models. Source, staging, intermediate, core, and presentation models
 - Complete streamlit app with at least 3 analytical queries that are actually useful, as in I would use it
 - Deploy streamlit app in Docker container and make it modular so that anyone with this repo can just run it easily
+
+Outcomes:
+- Replaced unsafe config files with .env file as per Claude Sonnet 3.5 recommendation on storing and retrieving secrets in Python. Simplified/removed some code from elt.py script and cleaned up a few other areas like gitignore file
+- RBAC DEFINITION file came in so clutch... I'm glad I learnt all that and saved it down. The code to call and store the API data as a dataframe still works as well, on first go too! It was so awesome to see.
