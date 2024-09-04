@@ -9,7 +9,7 @@ import pdb
 from snowflake.snowpark.session import Session
 from snowflake.connector.pandas_tools import write_pandas
 
-def get_api_key(config_name:str) -> str:
+def get_config(config_name:str) -> str:
     """
     Retrieves API key from config file
     """
@@ -87,20 +87,23 @@ def elt_flow() -> None:
     
     # Retrieve Bitcoin news sentiment from Alpha Vantage API
     df = get_sentinment_data("CRYPTO", "BTC")
+    print(df)
     
-    # Create Snowpark connection session to Snowflake
-    session = create_snowflake_session()
+    # # Create Snowpark connection session to Snowflake
+    # session = create_snowflake_session()
     
-    # Upsert raw news sentiment data into Snowflake
-    push_raw_data_to_snowflake(session, df, "ALPHAVANTAGE", "NEWS_SENTIMENT")
+    # # Upsert raw news sentiment data into Snowflake
+    # push_raw_data_to_snowflake(session, df, "ALPHAVANTAGE", "NEWS_SENTIMENT")
     
-    # Close session
-    logger.info(f"Closing Snowflake session, {session}")
-    session.close()
+    # # Close session
+    # logger.info(f"Closing Snowflake session, {session}")
+    # session.close()
 
-    logger.info("Extract and load ran successfully with no errors!")
+    # logger.info("Extract and load ran successfully with no errors!")
 
 if __name__ == "__main__":
+    load_dotenv()
+
     # Global path variables
     PROJECT_PATH = os.getcwd()
     DATA_PATH = f"{PROJECT_PATH}\\data"
