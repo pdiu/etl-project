@@ -109,10 +109,7 @@ if __name__ == "__main__":
 
     # Global API variables
     ALPHA_VANTAGE_API_URL = "https://www.alphavantage.co/query"
-    API_KEY = get_api_key("Alpha Vantage")
-    
-    # Get configurations
-    SNOWFLAKE_CONFIG = get_snowflake_config()
+    API_KEY = get_config("ALPHA_VANTTAGE_API_KEY")
     
     # Initialize logging
     logger = logging.getLogger(__name__)
