@@ -11,7 +11,7 @@ from snowflake.connector.pandas_tools import write_pandas
 
 def get_config(config_name:str) -> str:
     """
-    Retrieves API key from config file
+    Retrieves API key from env file
     """
     return os.getenv(config_name)
 
@@ -75,13 +75,13 @@ def push_raw_data_to_snowflake(session, df: pd.DataFrame, schema: str, table_nam
         , quote_identifiers = False
     )
     
-    logger.info(f"Upserting data into {session.get_current_database()}.{schema}.{table_name}")
+    logger.info(f"Append data into {session.get_current_database()}.{schema}.{table_name}")
     
     return None
 
-def elt_flow() -> None:
+def extract_and_load() -> None:
     """
-    ELT orchestrator. Master flow
+    ELT orchestrator
     """
     logger.info("Running ELT pipeline...")
     
@@ -90,37 +90,36 @@ def elt_flow() -> None:
     print(df)
     
     # # Create Snowpark connection session to Snowflake
-    # session = create_snowflake_session()
+    session = create_snowflake_session()
     
     # # Upsert raw news sentiment data into Snowflake
-    # push_raw_data_to_snowflake(session, df, "ALPHAVANTAGE", "NEWS_SENTIMENT")
+    push_raw_data_to_snowflake(session, df, "ALPHAVANTAGE", "NEWS_SENTIMENT")
     
     # # Close session
-    # logger.info(f"Closing Snowflake session, {session}")
-    # session.close()
+    logger.info(f"Closing Snowflake session, {session}")
+    session.close()
 
-    # logger.info("Extract and load ran successfully with no errors!")
+    logger.info("Extract and load ran successfully with no errors!")
 
 if __name__ == "__main__":
     load_dotenv()
 
     # Global path variables
-    PROJECT_PATH = os.getcwd()
-    DATA_PATH = f"{PROJECT_PATH}\\data"
-    CONFIG_PATH = f"{PROJECT_PATH}\\config"
-    LOG_PATH = f"{PROJECT_PATH}\\logs"
+    PROJECT_PATH:str = os.getcwd()
+    LOG_PATH:str = fr"{PROJECT_PATH}/logs"
+    os.makedirs(LOG_PATH, exist_ok=True) # Create log directory if it doesn't exist
 
     # Global API variables
-    ALPHA_VANTAGE_API_URL = "https://www.alphavantage.co/query"
-    API_KEY = get_config("ALPHA_VANTTAGE_API_KEY")
+    ALPHA_VANTAGE_API_URL:str = "https://www.alphavantage.co/query"
+    API_KEY:str = get_config("ALPHA_VANTTAGE_API_KEY")
     
     # Initialize logging
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
-    file_handler = logging.FileHandler(f"{LOG_PATH}\\logfile.log")
+    file_handler = logging.FileHandler(fr"{LOG_PATH}/logfile.log")
     log_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     file_handler.setFormatter(log_format)
     logger.addHandler(file_handler)
 
     # Call to main function
-    elt_flow()
+    extract_and_load()
