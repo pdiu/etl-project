@@ -1,7 +1,7 @@
 {{
     config(
         materialized = 'incremental'
-        , unique_key = 'unique_str'
+        , unique_key = 'primary_key'
     )
 }}
 
@@ -9,8 +9,8 @@ with stg_news_sentiment as (
     select
         title
         , url
-        , to_timestamp(time_published, 'YYYYMMDD"T"HH24MISS')::date as date_published
-        , to_timestamp(time_published, 'YYYYMMDD"T"HH24MISS')::time as time_published
+        , to_timestamp(time_published, 'YYYYMMDD"T"HH24MISS')::date as publish_date
+        , to_timestamp(time_published, 'YYYYMMDD"T"HH24MISS')::time as publish_time
         , to_array(parse_json(authors)) as author
         , summary
         , source
@@ -23,32 +23,37 @@ with stg_news_sentiment as (
         , cast(overall_sentiment_score as decimal(18,8)) as overall_sentiment_score
         , overall_sentiment_label
         , ticker_sentiment
-        , insert_timestamp
-    from {{ source('alphavantage', 'news_sentiment') }}
-),
-
-stg_news_sentiment_unique as (
-    select
-        distinct title || url || date_published as unique_str
-    from stg_news_sentiment
-),
-
-final as (
-    select
-        stg.*
+        , insert_timestamp::datetime::date as insert_date
+        , insert_timestamp::datetime::time as insert_time
     from
-        stg_news_sentiment as stg
-    inner join
-        stg_news_sentiment_unique as stg_unique
-            on stg.title || stg.url || stg.date_published = stg_unique.unique_str
-            
-    {% if is_incremental() %}
+        {{ source('alphavantage', 'news_sentiment') }}
+)
 
-    where
-        stg.insert_timestamp > select(max(stg.insert_timestamp) from {{ this }})
+, add_primary_key as (
+    select
+        md5(to_json(object_construct(* exclude(insert_time)))) as primary_key
+        , *
+    from
+        stg_news_sentiment
+)
 
-    {% endif %}
+, remove_duplicates as (
+    select
+        *
+    from
+        add_primary_key
+    qualify
+        row_number() over (
+            partition by primary_key
+            order by insert_date desc
+        ) = 1
+)
+
+, final as (
+    select
+        *
+    from
+        remove_duplicates
 )
 
 select * from final
-
