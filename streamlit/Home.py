@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import os
+from dotenv import load_dotenv
 from datetime import datetime
 from snowflake.snowpark.session import Session
 
@@ -7,11 +9,11 @@ def create_snowflake_session() -> Session:
     """
     Create a snowflake session
     """
-    account = st.secrets.snowflake.account_id
-    user = st.secrets.snowflake.username
-    password = st.secrets.snowflake.password
-    warehouse = st.secrets.snowflake.warehouse
-    role = st.secrets.snowflake.role
+    account = os.getenv("SNOWFLAKE_ACCOUNT_ID")
+    user = os.getenv("SNOWFLAKE_ACCOUNT_USER")
+    password = os.getenv("SNOWFLAKE_ACCOUNT_PASSWORD")
+    warehouse = os.getenv("SNOWFLAKE_ACCOUNT_WAREHOUSE")
+    role = os.getenv("SNOWFLAKE_ACCOUNT_ROLE")
     connection_params = {
         "account": account
         , "user": user
@@ -29,6 +31,8 @@ def get_data(sql_str: str, session) -> pd.DataFrame:
     return df
 
 def main():
+    load_dotenv()
+
     st.set_page_config(page_title="AV Visualizations App")
 
     # Title section
