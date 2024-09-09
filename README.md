@@ -5,27 +5,25 @@ Please find the deployed visualizations app at https://lph-etl-project.streamlit
 
 These skills are:
 - Using Python to make API calls to retrieve data (**E**LT)
-- Python for loading data into data store (E**L**T)
+- Pandas for loading data into data platform (E**L**T)
 - Snowflake as the data warehouse platform
-  - Using Snowflake efficiently from an administration POV. This means implementing best practice RBAC.
-- Prefect for task orchestration
-- DBT for analytical engineering, particularly with data transformations (EL**T**)
-- Azure/AWs for hosting a virtual machine, and therefore AWS/Azure SDK for IaC
-- Docker container running on cloud VM
-- Streamlit for creating a web application for interactive exploration of the data and data visualizations
+  - Using Snowflake efficiently from an administration POV. This means implementing best practice RBAC
+- Airflow for task orchestration
+- DBT for data modelling and transformation under software engineering frameworks (EL**T**)
+- Docker container for running everything, also so that anyone can run it from anywhere as long as they clone this repo and follow the instructions
+- Streamlit for creating a web application for interactive exploration of the data and building data visualizations
 
-# Notes
-## Virtual environment
-A virtual environment is used which is not tracked by git as per best practice. You can find all libraries required for this project in requirements.txt. To install all of them simply call ```pip install -r requirements.txt```
+# Setup
+## 1.Virtual environment
+Create a virtual python virtual environment in the root directory of this project ````python -m venv venv``` followed up ```source venv/bin/activate``` to activate the environment
 
-## Config data
-This repository tracks configuration which is not shared. You can create your own configs within them.
-- *secrets.json* contains API keys
-- *snowflake.json* contains Snowflake credentials
+All Python dependencies are tracked in requirements.txt file. With your virtual env activated run this command  ```pip install -r requirements.txt```
 
-## Other    
+## 2.Config data
+You will need to create a .env file to store your config which will be stored as environment variables when running the setup.py script. There is a template called .env_template which you can copy and rename to .env after filling in the values.
+
+# Notes    
 I will be implementing best practices along the way. This includes but is not limited to
 - Proper logging with the built-in Python module *logging*
 - Proper usage of configuration files
 - Proper usage of virtual environments
-- Proper usage of version control practices
