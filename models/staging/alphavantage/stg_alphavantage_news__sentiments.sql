@@ -1,7 +1,6 @@
 {{
     config(
-        materialized = 'incremental'
-        , unique_key = 'primary_key'
+        materialized = 'table'
     )
 }}
 
@@ -23,6 +22,9 @@ with stg_news_sentiment as (
         , cast(overall_sentiment_score as decimal(18,8)) as overall_sentiment_score
         , overall_sentiment_label
         , ticker_sentiment
+
+        -- Metadata
+        , current_user() as insert_user
         , insert_timestamp::datetime::date as insert_date
         , insert_timestamp::datetime::time as insert_time
     from

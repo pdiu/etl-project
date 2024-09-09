@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: news_sentiment
+  - name: fact_news_sentiment
     description: The core news sentiment data table which stores transformed news sentiment data from Alpha Vantage in its final state to be used for analytics.
     columns:
       - name: title

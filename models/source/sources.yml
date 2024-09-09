@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: alphavantage
-    database: staging
+    database: raw
     schema: alphavantage
     tables:
-      - name: news__sentiments
+      - name: news_sentiment

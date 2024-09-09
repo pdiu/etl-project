@@ -37,6 +37,3 @@ models:
       database: staging
       alphavantage:
         schema: alphavantage
-    marts:
-      core:
-        +materialized: table

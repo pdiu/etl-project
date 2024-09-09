@@ -21,6 +21,7 @@ select
     , f_ticker_sentiment.value:relevance_score::float as ticker_relevance_score
     , f_ticker_sentiment.value:ticker_sentiment_label::text as ticker_sentiment_label
     , f_ticker_sentiment.value:ticker_sentiment_score::float as ticker_sentiment_score
-from {{ ref('stg_alphavantage_news__sentiments')}}
-, lateral flatten(parse_json(topics)) as f_topics
-, lateral flatten(parse_json(ticker_sentiment)) as f_ticker_sentiment
+from
+    {{ ref('stg_alphavantage_news__sentiments')}}
+    , lateral flatten(parse_json(topics)) as f_topics
+    , lateral flatten(parse_json(ticker_sentiment)) as f_ticker_sentiment

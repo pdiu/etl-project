@@ -14,8 +14,9 @@
     - [15](#15)
     - [22](#22)
 - [2024](#2024)
-  - [April](#april)
+  - [September](#september)
     - [04](#04)
+    - [09](#09)
 # 2023
 ## July
 ### 25
@@ -218,7 +219,7 @@ Outcomes:
 - Updated one of the staging models to be an incremental model, familiarized with Jinja if statement
 
 # 2024
-## April
+## September
 ### 04
 Aye we're baaack. Let's finish this thing off now that we got a hell of a lot more dbt, data modelling and Snowflake professional work experience under our belts.
 
@@ -232,3 +233,6 @@ Objectives(for this comeback):
 Outcomes:
 - Replaced unsafe config files with .env file as per Claude Sonnet 3.5 recommendation on storing and retrieving secrets in Python. Simplified/removed some code from elt.py script and cleaned up a few other areas like gitignore file
 - RBAC DEFINITION file came in so clutch... I'm glad I learnt all that and saved it down. The code to call and store the API data as a dataframe still works as well, on first go too! It was so awesome to see.
+
+### 09
+I gotta learn about Python classes and when one should start using them in a project.

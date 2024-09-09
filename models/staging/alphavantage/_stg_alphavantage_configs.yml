@@ -1,0 +1,38 @@
+version: 2
+models:
+  - name: stg_alphavantage_news__sentiments
+    description: Staging file for alphavantage source news sentiment data. No joins
+      to other tables, only light transformations.
+    columns:
+      - name: primary_key
+        data_type: varchar
+      - name: title
+        data_type: varchar
+      - name: url
+        data_type: varchar
+      - name: publish_date
+        data_type: date
+      - name: publish_time
+        data_type: time
+      - name: author
+        data_type: array
+      - name: summary
+        data_type: varchar
+      - name: source
+        data_type: varchar
+      - name: category_within_source
+        data_type: varchar
+      - name: source_domain
+        data_type: varchar
+      - name: topics
+        data_type: varchar
+      - name: overall_sentiment_score
+        data_type: number
+      - name: overall_sentiment_label
+        data_type: varchar
+      - name: ticker_sentiment
+        data_type: varchar
+      - name: insert_date
+        data_type: date
+      - name: insert_time
+        data_type: time

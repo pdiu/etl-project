@@ -11,7 +11,7 @@ from snowflake.connector.pandas_tools import write_pandas
 
 def get_config(config_name:str) -> str:
     """
-    Retrieves API key from env file
+    Retrieves key from env file based on config name
     """
     return os.getenv(config_name)
 
