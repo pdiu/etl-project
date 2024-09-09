@@ -15,7 +15,7 @@ These skills are:
 
 # Setup
 ## 1.Virtual environment
-Create a virtual python virtual environment in the root directory of this project ````python -m venv venv``` followed up ```source venv/bin/activate``` to activate the environment
+Create a virtual python virtual environment in the root directory of this project ```python -m venv venv``` followed by ```source venv/bin/activate``` to activate the environment
 
 All Python dependencies are tracked in requirements.txt file. With your virtual env activated run this command  ```pip install -r requirements.txt```
 

@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: alphavantage
+    database: staging
+    schema: alphavantage
+    tables:
+      - name: news__sentiments

@@ -33,7 +33,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   analytics:
     staging:
-      +materialized: view
+      +materialized: table
       database: staging
       alphavantage:
         schema: alphavantage
